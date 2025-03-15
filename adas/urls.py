@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from adas import views as adasViews
+from administrador import views as adminViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', adasViews.home, name='home'),
+    path('panel/', adminViews.panel, name='panel'),
+    path('estadisticas/', adminViews.estadisticas, name='estadisticas'),
+    path('crear_ads/', adminViews.crear_ads, name='crear_ads'),
+
 ]

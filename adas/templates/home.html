@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container text-center mt-5">
+    <h1>Bienvenid@ a ADAS</h1>
+    <h2>Esta será nuestra futura landing page</h2>
+    
+
+    <div style="height: 50px;"></div>
+    <form action="{% url 'crear_ads' %}">
+        <div class="mb-3">
+            <h2 class="text-secondary">¿Eres administrador?</h2>
+        </div>
+        <button type="menu" class="btn btn-danger">Ingresar</button>
+    </form> 
+
+</div>
+
+
+{% endblock content %}

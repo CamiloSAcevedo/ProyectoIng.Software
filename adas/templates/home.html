@@ -20,7 +20,8 @@
 
         <!-- Imagen más grande a la derecha -->
         <div class="col-md-8 text-center">
-            <img src="imagen" class="img-fluid rounded" alt="no se montar imagenes todavia lol">
+            {% load static %}
+            <img src="{% static 'images/home_page.png' %}" class="img-fluid rounded" style="width: 600px; height: auto;" alt="Imagen de la página de inicio" />
         </div>
     </div>
 </div>

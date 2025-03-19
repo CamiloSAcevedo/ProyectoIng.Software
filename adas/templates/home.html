@@ -2,20 +2,27 @@
 
 {% block content %}
 
-<div class="container text-center mt-5">
-    <h1>Bienvenid@ a ADAS</h1>
-    <h2>Esta será nuestra futura landing page</h2>
-    
+<div class="container mt-5">
+    <div class="row align-items-center justify-content-center">
+        <!-- Sección de Texto más pequeña -->
+        <div class="col-md-4 d-flex flex-column justify-content-center">
+            <h1 class="fw-bold">Bienvenid@ a ADAS</h1>
+            <h2 class="text-secondary">Esta será nuestra futura landing page</h2>
 
-    <div style="height: 50px;"></div>
-    <form action="{% url 'crear_ads' %}">
-        <div class="mb-3">
-            <h2 class="text-secondary">¿Eres administrador?</h2>
+            <div class="mt-4">
+                <h2 class="text-secondary">¡Empieza a hacer anuncios con nosotros!</h2>
+            </div>
+
+            <form action="{% url 'panel' %}">
+                <button type="submit" class="btn btn-warning btn-lg mt-3">Crear anuncios</button>
+            </form>
         </div>
-        <button type="menu" class="btn btn-danger">Ingresar</button>
-    </form> 
 
+        <!-- Imagen más grande a la derecha -->
+        <div class="col-md-8 text-center">
+            <img src="imagen" class="img-fluid rounded" alt="no se montar imagenes todavia lol">
+        </div>
+    </div>
 </div>
-
 
 {% endblock content %}

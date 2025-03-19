@@ -15,15 +15,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from adas import views as adasViews
-from administrador import views as adminViews
+from django.urls import path, include
+from . import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', adasViews.home, name='home'),
-    path('panel/', adminViews.panel, name='panel'),
-    path('estadisticas/', adminViews.estadisticas, name='estadisticas'),
-    path('crear_ads/', adminViews.crear_ads, name='crear_ads'),
+    path('', views.home, name='home'),
+    path('administrador/', include('administrador.urls')),
+    path('autenticacion/', include('autenticacion.urls')),
+    path('autenticacion/', include('django.contrib.auth.urls')),
 
 ]
+
+# Configure Admin Titles
+admin.site.site_header = "Página administradora de ADAS"
+admin.site.site_title = "Titulo de la página administradora"
+admin.site.index_title = "Bienvenido al area de administración..."

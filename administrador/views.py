@@ -1,18 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 #from .models import AuthorizedPersonnel
 #from .models import Alert
 
 
 # Create your views here.
-
+@login_required
 def panel(request):
     return render(request, 'panel.html')
 
+@login_required
 def estadisticas(request):
     return render(request, 'estadisticas.html')
 
+@login_required
 def crear_ads(request):
     return render(request, 'crear_ads.html')
 

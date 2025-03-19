@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>There was an error with your form:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <li>{{ field|title }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container mt-4">
+    <div class="shadow p-4 mb-5 bg-body rounded">
+        <h1>Registro</h1>
+        <br/>
+
+        <form action="{% url 'registro' %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+
+            <input type="submit" value="Registrarse" class="btn btn-secondary">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -3,23 +3,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <style>
         .navbar {
-            background-color: gainsboro;
-            padding: 10px 20px;
+            background-color: white;
+            padding: 10px 21px;
             border-bottom: 2px solid #ccc;
         }
         .navbar-brand img {
             height: 50px; /* Ajusta el tamaño del logo */
         }
         .nav-item {
-            margin: 0 15px; /* Espaciado entre los ítems del menú */
+            margin: 0 40px; /* Espaciado entre los ítems del menú */
         }
         .btn-auth {
-            margin-left: 10px; /* Separación entre botones */
+            margin-left: 15px; /* Separación entre botones */
         }
 
         .navbar a {
             color: black;
-            padding: 10px 15px;
+            padding: 10px 25px;
             text-decoration: none;
             display: block;
             transition: 0.3s;
@@ -32,57 +32,88 @@
             margin-top: 15px; /* Debe coincidir con el ancho de la navbar */
             padding: 20px;
         }
+        /* Botón Registrarse (Verde Azulado) */
+        .btn-register {
+            background-color: #c7f2f8; /* Verde Azulado */
+            color: rgb(255, 255, 255);
+            border-radius: 8px;
+            padding: 10px 20px;
+            border: 2px solid #b1eff8;
+            transition: all 0.3s ease;
+        }
+
+        .btn-register:hover {
+            background-color: #85dae7 !important;
+            border-color: #0c5c6c !important;
+        }
+
+        /* Botón Iniciar Sesión (Naranja) */
+        .btn-login {
+            background-color: #ecf8b7; /* Naranja */
+            color: white;
+            border-radius: 8px;
+            padding: 10px 20px;
+            border: 2px solid #e9e6a3;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #e9e8a7 !important;
+            border-color: #95973a !important;
+        }
+        /* Botón Cerrar Sesión (Rojo Claro) */
+        .btn-logout {
+            background-color: #f9bdbd;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 20px;
+            border: 2px solid #fc8686;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #febebe !important;
+            border-color: #ff9797 !important;
+        }
+
+        .d-flex a {
+            margin-left: 10px;
+        }
+
     </style>
 </head>
  
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">
-        {% load static %}
-        <img src="{%  static 'images/logoADAS.png' %}" alt="70" width="auto" height="30"
-        class="d-inline-block align-text-top" />
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Informacion</a>
-          </li>
-      </div>
+        <!-- Logo -->
+        <a class="navbar-brand" href="{% url 'home' %}">
+            {% load static %}
+            <img src="{% static 'images/logoADAS.png' %}" alt="Logo ADAS" height="30" />
+        </a>
+
+        <!-- Menú de navegación -->
+        <div class="collapse navbar-collapse d-flex justify-content-between">
+            <!-- Enlace de información -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Información</a>
+                </li>
+            </ul>
+
+            <!-- Botones de autenticación en la esquina superior derecha -->
+            <div class="d-flex ms-auto">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}" class="btn btn-logout">Cerrar Sesión</a>
+                {% else %}
+                    <a href="{% url 'registro' %}" class="btn btn-register">Registrarse</a>
+                    <a href="{% url 'login' %}" class="btn btn-login">Iniciar Sesión</a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-  </nav> 
-  
+</nav>
 
 <div class = "container">
     {% block content %}
     {% endblock %}
 </div> 
-
-<!-- 
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'images/logoADAS.png' %}"> 
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Informacion</a></li>
-            </ul>
-        </div>
-
-        <div class="d-flex">
-            <a href="#" class="btn btn-outline-dark btn-auth">Ingresar</a>
-            <a href="#" class="btn btn-outline-dark btn-auth">Registrarse</a>
-        </div>
-    </div>
-</nav> -->

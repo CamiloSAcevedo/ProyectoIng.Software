@@ -1,27 +1,49 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} <!-- Cambio de base.html a home.html -->
+{% load static %} <!-- Carga de archivos estáticos (imagenes) -->
+{% block content %} <!-- Bloque de contenido -->
 
-{% block content %}
+<style>
 
-<div class="container mt-5">
-    <div class="row align-items-center justify-content-center">
-        <!-- Sección de Texto más pequeña -->
-        <div class="col-md-4 d-flex flex-column justify-content-center">
-            <h1 class="fw-bold">Bienvenid@ a ADAS</h1>
-            <h2 class="text-secondary">Esta será nuestra futura landing page</h2>
+.btn-click { /* Botón personalizado (crear anuncios) */
+    background-color: #ffc26c; /* naranjita */
+    color: black; /* Texto en negro */
+    border: none; 
+    border-radius: 8px; /*Borde redondito*/
+    padding: 10px 20px; /* margenes entre boton y otras cosas */
+    transition: 0.3s; /* transicion al pasar el mouse*/
+}
 
-            <div class="mt-4">
-                <h2 class="text-secondary">¡Empieza a hacer anuncios con nosotros!</h2>
-            </div>
+.btn-click:hover { /* Color de fondo al pasar el mouse */
+    background-color: #a0c1e7; /* Azul más oscuro en hover */
+}
+</style>
 
-            <form action="{% url 'panel' %}">
-                <button type="submit" class="btn btn-warning btn-lg mt-3">Crear anuncios</button>
+<!-- Sección principal web -->
+<div class="container mt-2"> <!-- container me centra el contenido y me da margenes lat. (mt-2, es el margen sup.) -->
+    <div class="row align-items-center"> <!-- me alinea contenido de las columnas al centro -->
+        <!-- Sección de Texto -->
+        <div class="col-md-5 text-start"> <!-- ocupa 5 de las 12 columnas en disp. medianos y text-start me alinea a izquierda -->
+            <h1 class="fw-bold text-dark">¡Publica tus anuncios en redes sociales con un solo clic!</h1><!-- negrita y color de texto oscuro (#343a40 en Bootstrap) -->
+            <p class="text-secondary fs-5"> <!-- color letra gris tamaño de letra 20xp en bootstrap -->
+                Ahorra tiempo y maximiza el alcance de tus campañas con nuestra plataforma de automatización de anuncios.
+            </p> <!-- cierro parrafo -->
+            <p class="text-secondary fs-5">
+                <!-- texto en strong, o sea resaltado -->
+                Publica en <strong>Facebook, X, Google</strong> y más en segundos.
+            </p>
+            <form action="{% url 'panel' %}"> <!-- redirigimos a la vista panel -->
+                <!-- submit, envia al hacer click, shadow sombra -->
+                <button type="submit" class="btn-click btn-lg px-4 py-2 shadow">
+                    Crear anuncios
+                    <!-- Imagen de 24px, ms-2 margen izq pequeño -->
+                    <img src="{% static 'images/icono_click.png' %}" alt="Icono click" class="ms-2" height="24">
+                </button>
             </form>
         </div>
 
-        <!-- Imagen más grande a la derecha -->
-        <div class="col-md-8 text-center">
-            {% load static %}
-            <img src="{% static 'images/home_page.png' %}" class="img-fluid rounded" style="width: 600px; height: auto;" alt="Imagen de la página de inicio" />
+        <!-- Imagen ajustada -->
+        <div class="col-md-7 text-end"> <!-- Imagen más a la derecha -->
+            <img src="{% static 'images/image_homep.png' %}" class="img-fluid" alt="image_homep">
         </div>
     </div>
 </div>

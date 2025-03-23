@@ -1,119 +1,117 @@
+<!DOCTYPE html> <!-- Inicio de la página -->
+<html lang="es"> <!-- Lenguaje español -->
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    {% load static %}
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Escala de la página (me falta es para movil)-->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/ico_logo.ico' %}">
+    <title>ADAS</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
-        .navbar {
-            background-color: white;
-            padding: 10px 21px;
-            border-bottom: 2px solid #ccc;
-        }
-        .navbar-brand img {
-            height: 50px; /* Ajusta el tamaño del logo */
-        }
-        .nav-item {
-            margin: 0 40px; /* Espaciado entre los ítems del menú */
-        }
-        .btn-auth {
-            margin-left: 15px; /* Separación entre botones */
+        /* Navbar */
+        .navbar { /* Barra de navegación */
+            background-color: white; /* Fondo blanco */
+            padding: 10px 45px; /* separación de botones con esquina izq y der */
+            border-bottom: 2px solid #ccc; /* Borde inferior gris */
         }
 
-        .navbar a {
-            color: black;
-            padding: 10px 25px;
-            text-decoration: none;
-            display: block;
-            transition: 0.3s;
-        }
-        .navbar a:hover {
-            background-color: grey;
+        .navbar-brand img { /* Logo */
+            height: 50px; /* Tamaño del logo */
         }
 
-        .container {
-            margin-top: 15px; /* Debe coincidir con el ancho de la navbar */
-            padding: 20px;
-        }
-        /* Botón Registrarse (Verde Azulado) */
-        .btn-register {
-            background-color: #c7f2f8; /* Verde Azulado */
-            color: rgb(255, 255, 255);
-            border-radius: 8px;
-            padding: 10px 20px;
-            border: 2px solid #b1eff8;
-            transition: all 0.3s ease;
+        .nav-link { /* Enlaces del menú (inicio, nosotros, servicios) */
+            color: black; /* Color de letra (inicio, nosotros, servicios) */
+            font-weight: 400; /* Grosor de letra */
+            padding: 8px 15px; /* Espaciado de los botones con la barra gris  */
+            transition: 0.3s; /* Transición de color al pasar el mouse */
         }
 
-        .btn-register:hover {
-            background-color: #85dae7 !important;
-            border-color: #0c5c6c !important;
+        .nav-link:hover { /* Color de letra al pasar el mouse (inicio, nosotros, servicios) */
+            color: gray;
         }
 
-        /* Botón Iniciar Sesión (Naranja) */
-        .btn-login {
-            background-color: #ecf8b7; /* Naranja */
-            color: white;
-            border-radius: 8px;
-            padding: 10px 20px;
-            border: 2px solid #e9e6a3;
-            transition: all 0.3s ease;
+        .btn-auth { /* Botones de autenticación (iniciar sesión, registrarse, cerrar sesión) */
+            border-radius: 20px; /* Bordes redondeados */
+            padding: 8px 20px; /* Espaciado de los botones */
+            font-weight: 500; /* Grosor de letra */
+            transition: 0.3s; /* Transición de color al pasar el mouse */
         }
 
-        .btn-login:hover {
-            background-color: #e9e8a7 !important;
-            border-color: #95973a !important;
+        .btn-register { /* Botón de registrarse */
+            border: 1px solid black; /* Borde del botón */
+            background-color: white; /* Fondo blanco */
+            color: black; /* Color de letra */
         }
-        /* Botón Cerrar Sesión (Rojo Claro) */
-        .btn-logout {
-            background-color: #f9bdbd;
-            color: white;
-            border-radius: 8px;
-            padding: 10px 20px;
-            border: 2px solid #fc8686;
-            transition: all 0.3s ease;
+
+        .btn-register:hover { /* Color de letra al pasar el mouse por boton registrarse*/
+            background-color: black; 
+            color: white; /* Color de letra */
+        }
+
+        .btn-login { /* Botón de iniciar sesión */
+            background-color: transparent; /* Fondo transparente */
+            color: black; /* Color de letra */
+            border: none; /* Sin borde */
+        }
+
+        .btn-login:hover { /* Color de letra al pasar el mouse por boton iniciar sesión*/
+            color: gray; /* Color de letra */
+        }
+
+        .btn-logout { /* Botón de cerrar sesión */
+            border: 1px solid black; /* Borde del botón */
+            background-color: white; /* Fondo blanco */
+            color: black; /* Color de letra */
         }
 
         .btn-logout:hover {
-            background-color: #febebe !important;
-            border-color: #ff9797 !important;
-        }
-
-        .d-flex a {
-            margin-left: 10px;
+            background-color: black; 
+            color: white; /* Color de letra */
         }
 
     </style>
 </head>
- 
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+
+<body>
+
+<!-- Navbar con botones -->
+<nav class="navbar navbar-expand-lg"> <!-- Barra de navegación -->
+    <div class="container-fluid"> <!-- Contenedor de la barra de navegación -->
         <!-- Logo -->
         <a class="navbar-brand" href="{% url 'home' %}">
-            {% load static %}
-            <img src="{% static 'images/Logo-ADAS_pau.png' %}" alt="Logo ADAS" class="img-fluid d-block mx-auto" style="height: 38px;" />
+            <img src="{% static 'images/LogoADAS.png' %}" alt="Logo ADAS">
         </a>
 
-        <!-- Menú de navegación -->
-        <div class="collapse navbar-collapse d-flex justify-content-between">
-            <!-- Enlace de información -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Información</a>
-                </li>
+        <!-- Navegación + botones a la derecha -->
+        <div class="d-flex ms-auto align-items-center gap-3">
+            <!-- Enlaces del menú -->
+            <ul class="navbar-nav flex-row gap-3 mb-0">
+
+                <!-- Por ahora estos botones no funcionan -->
+                <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Nosotros</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Servicios</a></li>
             </ul>
 
-            <!-- Botones de autenticación en la esquina superior derecha -->
-            <div class="d-flex ms-auto">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'logout' %}" class="btn btn-logout">Cerrar Sesión</a>
-                {% else %}
-                    <a href="{% url 'registro' %}" class="btn btn-register">Registrarse</a>
-                    <a href="{% url 'login' %}" class="btn btn-login">Iniciar Sesión</a>
-                {% endif %}
-            </div>
+            <!-- Botones para autenticación -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="btn btn-logout btn-auth">Cerrar Sesión</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-login btn-auth">Iniciar sesión</a>
+                <a href="{% url 'registro' %}" class="btn btn-register btn-auth">Registrarse</a>
+            {% endif %}
         </div>
     </div>
 </nav>
 
-<div class = "container">
-    {% block content %}
-    {% endblock %}
-</div> 
+<!-- :) -->
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

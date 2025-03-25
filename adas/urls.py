@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from adas import views as adasViews
+from administrador import views as adminViews
 
 
 urlpatterns = [
@@ -25,6 +27,14 @@ urlpatterns = [
     path('administrador/', include('administrador.urls')),
     path('autenticacion/', include('autenticacion.urls')),
     path('autenticacion/', include('django.contrib.auth.urls')),
+    path('', adasViews.home, name='home'),
+    path('panel/', adminViews.panel, name='panel'),
+    path('estadisticas/', adminViews.estadisticas, name='estadisticas'),
+    path('campaña/', adminViews.campaña, name='campaña'),
+    path('crear_campaña/', adminViews.crear_campaña, name='crear_campaña'),
+    path('campañas_creadas/', adminViews.campañas_creadas, name='campañas_creadas'),
+    path('ad_set/', adminViews.ad_set, name='ad_set'),
+    path('ad/', adminViews.ad, name='ad'),
 
 ]
 

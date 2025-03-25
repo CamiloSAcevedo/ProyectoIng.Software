@@ -1,0 +1,20 @@
+{% extends 'panel.html' %}
+
+{% block content %}
+    <h1>Campañas creadas </h1>
+    {% for campaña in campañas %}
+    <div v-for="campaña in campañas" class="col">
+        <div class="card" style="width: 30rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ campaña.nombre }}</h5>
+              <p class="card-text">{{ campaña.budget}}</p>
+              {% if campaña.objective %}
+                <p class="card-text">{{ campaña.objective }}</p>  
+              {% endif %}
+            </div>
+          </div>
+    </div>
+    {% endfor %}
+
+
+{% endblock content %}

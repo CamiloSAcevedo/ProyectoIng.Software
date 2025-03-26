@@ -31,9 +31,9 @@ def registro(request):
     if request.method == "POST":
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            form.save()  # 🔹 Solo guardamos el usuario, sin autenticación
+            form.save()  # Solo guardamos el usuario, sin autenticación
             messages.success(request, "Registro exitoso. Ahora inicia sesión.")
-            return redirect('login')  # 🔹 Redirigir al login, NO a home
+            return redirect('login')  # Redirigir al login, NO a home
     else:
         form = RegisterUserForm()
 

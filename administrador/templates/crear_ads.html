@@ -1,5 +1,56 @@
-{% extends 'panel.html' %}
+{% extends 'panel.html' %} 
 
 {% block content %}
-<h2>Aquí se podrán definir las métricas de los anuncios</h2>
-{% endblock content %}
+
+<h2 class="mb-4">Crear Anuncios</h2>
+
+<!-- Estilo para que el mensaje se desaparezca despues de cierto tiempo (de que el anuncio se publico correctamente)-->
+<style>
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
+
+.alert {
+    animation: fadeOut 2s ease-in-out forwards;
+}
+</style>
+
+<!-- Mostrar mensajes de publicación exitosa o no-->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Publicación  en X -->
+<style>
+    .btn-publicar { /* apariencia de botón publicar twett*/
+        background-color: #4e4e4e; /* color de fondo de boton */
+        border-color: #000000; /* color de borde*/
+        color: white; /*color de la letra*/
+        font-weight: bold; /* letra negrita */
+    }
+    .btn-publicar:hover { /*Como se ve el boton el pasar el mouse*/
+        background-color: #545454; /* Naranja más oscuro */
+        border-color: #000000; /* color del borde */
+        color: black; /* color de la letra al pasar mouse */
+    }
+</style>
+
+<form method="POST"> <!-- POST, enviar datos al servidor -->
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="tweet" class="form-label">Escribe tu tweet con la información de la vacante:</label>
+        <textarea id="tweet" name="tweet" class="form-control" rows="3" required></textarea> <!-- Requiere que escribas algo para enviar el tweet -->
+    </div>
+    <button type="submit" class="btn btn-publicar w-100">
+        <i class="fas fa-bullhorn"></i> Publicar Vacante
+    </button>
+</form>
+<!-- End Publicación  en X -->
+
+{% endblock %}

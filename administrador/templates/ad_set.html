@@ -1,5 +1,126 @@
 {% extends 'panel.html' %}
 
 {% block content %}
-<h2>Aquí se podrán definir las métricas de los anuncios</h2>
+<h2>Aquí se podrán definir las métricas de los ad sets</h2>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;  
+        margin-top: 50px; 
+    }
+
+    .card-custom {
+        width: 900px;  
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        border-radius: 10px; 
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#campaign_id").on("change", function () {
+            var campaignId = $(this).val();  
+
+            if (campaignId) {
+                console.log("Enviando solicitud para campaign_id:", campaignId); // 📌 LOG
+                $.ajax({
+                    url: "{% url 'obtener_optimization_goals' %}", 
+                    data: {"campaign_id": campaignId},
+                    dataType: "json",
+                    success: function (response) {
+                        console.log("Respuesta recibida:", response); // 📌 LOG
+                        var select = $("#optimization_goal");
+                        select.empty(); 
+
+                        if (response.optimization_goals.length > 0) {
+                            $.each(response.optimization_goals, function (index, goal) {
+                                select.append(new Option(goal, goal));
+                            });
+                        } else {
+                            select.append(new Option("No hay opciones disponibles", ""));
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error en la solicitud AJAX:", xhr.responseText); // 📌 LOG
+                        alert("Error! No existe ninguna campaña con el id ingresado");
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+<div class="form-container">
+    <div class="card-container">
+        <div class="card card-custom">
+            <h2>Crear Ad Set</h2>
+
+            <form method="POST" action="{% url 'crear_adset' %}">
+                {% csrf_token %}
+
+                <label for="campaign_id">Campaign ID:</label>
+                <input type="text" id="campaign_id" name="campaign_id">
+            
+                <label for="optimization_goal">Optimization Goal:</label>
+                <select id="optimization_goal" name="optimization_goal">
+                    <option value="">Seleccione una opción</option>
+                </select>
+
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}">Nombre del adset:</label>
+                    {{ form.nombre }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.daily_budget.id_for_label }}">Presupuesto diario:</label>
+                    {{ form.daily_budget }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.billing_event.id_for_label }}">Selecciona evento de cobro:</label>
+                    {{ form.billing_event }}
+                </div>
+                
+            
+                <button type="submit" class="btn btn-primary">Crear ad set</button> 
+            </form>
+
+            
+             {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert 
+                            {% if message.tags == 'success' %}alert-success
+                            {% elif message.tags == 'error' %}alert-danger{% endif %} 
+                            alert-dismissible fade show" role="alert">
+                            
+                            {{ message }}
+
+                            {% if message.tags == 'success' %}
+                                <a href="{% url 'mis_adsets' %}" class="btn btn-primary btn-sm">Ver adsets creados</a>
+                            {% endif %}
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+            {% endif %}
+        
+        
+        </div>
+    </div>
+</div>
+
+
 {% endblock content %}

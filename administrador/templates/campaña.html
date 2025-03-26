@@ -29,7 +29,6 @@
 <div class="form-container">
     <div class="card-container">
         <div class="card card-custom">
-            <h5 class="card-title">Información de campaña</h5>
 
             <h2>Crear Campaña</h2>
 
@@ -40,11 +39,6 @@
                 <div class="form-group">
                     <label for="id_nombre">Nombre de la campaña:</label>
                     {{ form.nombre }}
-                </div>
-
-                <div class="form-group">
-                    <label for="id_budget">Budget:</label>
-                    {{ form.budget }}
                 </div>
 
                 <div class="form-group">
@@ -64,7 +58,6 @@
                 <form method="POST" action="{% url 'crear_campaña' %}">
                     {% csrf_token %}
                     <input type="hidden" name="nombre" value="{{ form.nombre.value }}">
-                    <input type="hidden" name="budget" value="{{ form.budget.value }}">
                     <input type="hidden" name="red_social" value="{{ form.red_social.value }}">
 
                     {% if red_social == "tiktok" %}
@@ -101,15 +94,14 @@
 
                             {% if message.tags == 'success' %}
                                 <!-- Botón para redirigir a otra página -->
-                                <a href="{% url 'campañas_creadas' %}" class="btn btn-primary btn-sm">Ver campañas creadas</a>
+                                <a href="{% url 'mis_campañas' %}" class="btn btn-primary btn-sm">Ver campañas creadas</a>
                             {% endif %}
 
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endfor %}
             {% endif %}
-
-
+            
         </div>
     </div>
 </div>

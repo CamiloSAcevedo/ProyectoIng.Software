@@ -107,9 +107,59 @@
         vertical-align: middle; /* Alineación vertical */
     }
 
+    .submenu {
+        display: block;
+        padding-left: 20px;
+        list-style: none; /* Quita los puntos de la lista */
+        padding-left: 0; /* Elimina la sangría izquierda */
+    }
+
+    .submenu li {
+        padding-left: 20px; 
+    }
+
+    .submenu.show {
+        display: block;
+    }
+
 
     </style>
 </head>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let toggles = document.querySelectorAll(".dropdown-toggle");
+
+        toggles.forEach(function (toggle) {
+            toggle.addEventListener("click", function (event) {
+                event.preventDefault();
+                
+                // Obtener el menú asociado al toggle actual
+                let submenu = this.nextElementSibling;
+
+                // Cerrar otros menús abiertos antes de abrir este
+                document.querySelectorAll(".dropdown-menu").forEach(function (menu) {
+                    if (menu !== submenu) {
+                        menu.classList.remove("show");
+                    }
+                });
+
+                // Alternar la visibilidad del menú
+                submenu.classList.toggle("show");
+            });
+        });
+
+        // Cerrar el menú si se hace clic fuera
+        document.addEventListener("click", function (event) {
+            if (!event.target.closest(".nav-item")) {
+                document.querySelectorAll(".dropdown-menu").forEach(function (menu) {
+                    menu.classList.remove("show");
+                });
+            }
+        });
+    });
+</script>
+
 
 
 <body>
@@ -134,10 +184,27 @@
         <a href="{% url 'crear_ads' %}" class="btn btn-light">
             <img src="{% static 'images/icono_mas.png' %}" class="icono"> Crear anuncio
         </a>
-        <!-- Enlace a "Crear campaña" -->
-        <a href="{% url 'campaña' %}" class="btn btn-light">
-            <img src="{% static 'images/icono_mas.png' %}" class="icono"> Crear campaña
-        </a>
+
+        <ul class="navbar-nav">
+            <!-- Campañas - Submenú desplegable -->
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/icono_mas.png' %}" class="icono">Campañas</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'campaña' %}">Crear campaña</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_campañas' %}">Mis campañas</a></li>
+                </ul>
+            </li>
+            <!-- Ad sets - Submenú desplegable -->
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/icono_mas.png' %}" class="icono"> Ad sets</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'ad_set' %}">Crear adset</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_adsets' %}">Mis adsets</a></li>
+                </ul>
+            </li>
+        </ul>
+        
+      
         <!-- Enlace a "Estadísticas" -->
         <a href="#" class="btn btn-light">
             <img src="{% static 'images/icono_grafico.png' %}" class="icono"> Estadisticas

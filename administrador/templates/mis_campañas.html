@@ -1,0 +1,26 @@
+{% extends 'panel.html' %} 
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Mis campañas</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for campaña in campañas %}
+        <div class="col">
+            <div class="card border rounded-3 shadow-sm p-3">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ campaña.nombre }}</h5>
+                    <p class="card-text"><strong>Red Social:</strong>{{ campaña.red_social}}</p>
+                    <p class="card-text"><strong>Objective:</strong>{{ campaña.objective}}</p>
+                    <!--
+                    {% if campaña.campaign_id %}
+                    <p class="card-text"><strong>Id: </strong> {{ campaña.campaign_id}}</p>
+                    {% endif %}
+                    -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

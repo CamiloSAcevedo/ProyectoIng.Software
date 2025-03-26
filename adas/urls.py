@@ -30,10 +30,15 @@ urlpatterns = [
     path('', adasViews.home, name='home'),
     path('panel/', adminViews.panel, name='panel'),
     path('estadisticas/', adminViews.estadisticas, name='estadisticas'),
+    # Campaña
     path('campaña/', adminViews.campaña, name='campaña'),
     path('crear_campaña/', adminViews.crear_campaña, name='crear_campaña'),
-    path('campañas_creadas/', adminViews.campañas_creadas, name='campañas_creadas'),
+    path('mis_campañas/', adminViews.mis_campañas, name='mis_campañas'),
+    # AdSet
+    path('obtener_optimization_goals/', adminViews.obtener_optimization_goals, name='obtener_optimization_goals'),
     path('ad_set/', adminViews.ad_set, name='ad_set'),
+    path('crear_adset/', adminViews.crear_adset, name='crear_adset'),
+    path('mis_adsets/', adminViews.mis_adsets, name='mis_adsets'),
     path('ad/', adminViews.ad, name='ad'),
 
 ]

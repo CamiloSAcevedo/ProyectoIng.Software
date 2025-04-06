@@ -1,13 +1,12 @@
 #import tweepy
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib import messages
 #from django.contrib.auth.decorators import login_required
 #from .models import AuthorizedPersonnel
 #from .models import Alert
-from .forms import CampaignForm, AdSetForm, AdForm
-from .models import Campaign, AdSet, Ad
+from .forms import CampaignForm, AdSetForm, AdForm, CreativeForm
+from .models import Campaign, AdSet, Ad, Creative
 from django. http import JsonResponse 
 
 import requests
@@ -23,6 +22,7 @@ ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 AD_ACCOUNT_ID = os.getenv("ADD_ACCOUNT_ID")
 API_VERSION = os.getenv("API_VERSION")
 BASE_URL = os.getenv("BASE_URL")
+PAGE_ID = os.getenv("PAGE_ID")
 
 # Create your views here.
 #@login_required esto es de autenticacion
@@ -66,6 +66,7 @@ def crear_ads(request):
     return render(request, "crear_ads.html")
 '''
 
+# ---------------------- CREAR CAMPAÑA META ----------------------#
 def campaña(request):
     red_social = ""  # Valor por defecto
 
@@ -77,8 +78,6 @@ def campaña(request):
 
     return render(request, 'campaña.html', {'form': form, 'red_social': red_social})
 
-
-# ---------------------- CREAR CAMPAÑA META ----------------------#
 def crear_campaña(request):
     if request.method == "POST":
         form = CampaignForm(request.POST)
@@ -153,38 +152,28 @@ def ad_set(request):
 
 def crear_adset(request):
     if request.method == "POST":
-        adset = AdSetForm(request.POST)
-        if adset.is_valid():
-            print("VÁLIDO")
-            # Guarda en la base de datos sin el ID de meta
-            adset.save()  
-            messages.success(request, "¡Los datos de ad set se ingresaron exitosamente!")
+        form = AdSetForm(request.POST)
+        if form.is_valid():
+            adset = form.save(commit=False)
 
-            # Evita guardarlo aún en la BD para guardar después con ID de meta
-            #adset = form.save(commit=False)  
-
-            '''
             # Verificar que la campaña existe en la BD y tiene un ID en Meta
-            campaign = adset.campaign_id
-            if not campaign.campaign_id:
-                messages.error(request, "❌ La campaña aún no ha sido creada en Meta.")
+            try:
+                campaign = Campaign.objects.get(campaign_id=adset.campaign_id)
+            except Campaign.DoesNotExist:
+                messages.error(request, "❌ La campaña aún no ha sido creado en Meta.")
                 return redirect('crear_adset')
 
-            # Obtener los posibles optimization goals según el objective de la campaña
-            available_goals = OPTIMIZATION_GOALS.get(campaign.objective, [])
-            if adset.optimization_goal not in available_goals:
-                messages.error(request, "❌ El Optimization Goal seleccionado no es válido para esta campaña.")
-                return redirect('crear_adset')
-            '''
+            adset.save()  # TO-DO: Eliminar este save para guardarlo cuando ya se haya recibido el id de meta
+            messages.success(request, "¡Los datos de ad set se ingresaron exitosamente!")
 
             # Datos para la API de Meta
             url = f"{BASE_URL}/{AD_ACCOUNT_ID}/adsets"
             payload = {
-                "name": adset.cleaned_data['nombre'],
-                "campaign_id": adset.cleaned_data['campaign_id'],
-                "daily_budget": adset.cleaned_data['daily_budget'],
-                "billing_event": "IMPRESSIONS",  # Se puede hacer dinámico según la necesidad
-                "optimization_goal": adset.cleaned_data['optimization_goal'],
+                "name": adset.nombre,
+                "campaign_id": adset.campaign_id,
+                "daily_budget": adset.daily_budget,
+                "billing_event": adset.billing_event,  # Se puede hacer dinámico según la necesidad
+                "optimization_goal": adset.optimization_goal,
                 "status": "PAUSED",
                 "access_token": ACCESS_TOKEN
             }
@@ -238,24 +227,47 @@ def obtener_optimization_goals(request):
 
 
 # ---------------------- CREAR ANUNCIO META  ----------------------#
+def ad(request):
+    red_social = ""  # Valor por defecto
+
+    if request.method == "POST":
+        red_social = request.POST.get("red_social", "")  # Captura la red social del formulario
+        form = AdForm(request.POST, red_social=red_social)  # Pasa red_social al formulario
+    else:
+        form = AdForm()
+
+    return render(request, 'ad.html', {'form': form, 'red_social': red_social})
+
 def crear_ad(request):
     if request.method == "POST":
-        form = AdForm(request.POST)
+        form = AdForm(request.POST)  
         if form.is_valid():
-            anuncio = form.save(commit=False)
-
-            # Verificar que el AdSet exista en la BD
-            if not anuncio.adset.adset_id:
+            ad = form.save(commit=False)  
+            
+            # Confirmación de que existe el adset
+            try:
+                adset = AdSet.objects.get(adset_id=ad.adset_id)
+            except AdSet.DoesNotExist:
                 messages.error(request, "❌ El AdSet aún no ha sido creado en Meta.")
                 return redirect('crear_ad')
+            
+            # Confirmación de que existe el creative
+            try:
+                creative = Creative.objects.get(creative_id=ad.creative_id)
+            except Creative.DoesNotExist:
+                messages.error(request, "❌ El Creative aún no ha sido creado en Meta.")
+                return redirect('crear_ad')
+            
+            ad.save()  # TO-DO: Eliminar este save para guardarlo cuando ya se haya recibido el id de meta
+            messages.success(request, "¡Los datos de ad set se ingresaron exitosamente!")
 
             # Datos para la API de Meta
             url = f"{BASE_URL}/{AD_ACCOUNT_ID}/ads"
             payload = {
-                "name": anuncio.nombre,
-                "adset_id": anuncio.adset.adset_id,
+                "name": ad.nombre,
+                "adset_id": ad.adset_id,
                 "status": "PAUSED",
-                "creative": {"creative_id": anuncio.creative_id},  # Debes haber creado el Creative antes
+                "creative": {"creative_id": ad.creative_id},  # Debes haber creado el Creative antes
                 "access_token": ACCESS_TOKEN
             }
 
@@ -265,9 +277,9 @@ def crear_ad(request):
                 respuesta_json = response.json()
 
                 if response.status_code == 200 and "id" in respuesta_json:
-                    anuncio.ad_id = respuesta_json["id"]
-                    anuncio.save()
-                    messages.success(request, f"✅ Anuncio creado. ID: {anuncio.ad_id}")
+                    ad.ad_id = respuesta_json["id"]
+                    ad.save()
+                    messages.success(request, f"✅ Anuncio creado. ID: {ad.ad_id}")
                 else:
                     error_msg = respuesta_json.get("error", {}).get("message", "No se pudo crear el anuncio")
                     messages.error(request, f"❌ Error en Meta: {error_msg}")
@@ -277,13 +289,91 @@ def crear_ad(request):
             '''
 
             return redirect('crear_ad')
+        
+        else:
+            print(ad.errors)
+            messages.error(request, "Hubo un error al crear el ad. Revisa los campos.") 
+
+    
+    # Limpiar mensajes antes de renderizar la página
+    storage = messages.get_messages(request)
+    storage.used = True  
+
+    form = AdForm()
+
+    return render(request, 'ad.html', {'form': form})
+
+def mis_ads(request):
+    ads = Ad.objects.all()
+    return render(request, 'mis_ads.html', {'ads': ads})
+
+# ---------------------- CREAR CREATIVE META  ----------------------#
+
+def crear_creative(request):
+    if request.method == "POST":
+        form = CreativeForm(request.POST)
+
+        if form.is_valid():
+            creative = form.save(commit=False)  
+            creative.save()  # TO-DO: Eliminar este save para guardarlo cuando ya se haya recibido el id de meta
+            print("se salvaron los datos")
+            messages.success(request, "¡Los datos del creative set se ingresaron exitosamente!")
+
+            # Construir payload para la API de Meta
+            payload = {
+                "name": creative.nombre,  # Nombre interno para identificación en la API
+                "body": creative.body or "", # Cuerpo del anuncio
+                "object_story_spec": {
+                    "page_id": PAGE_ID,
+                    "link_data": {
+                        "message": creative.message, # Mensaje principal
+                        "name": creative.name,  # Título visible en el anuncio
+                        "image_url": creative.image_url,
+                        "call_to_action": {
+                            "type": creative.call_to_action,
+                            "value": {
+                                "link": creative.link # Enlace al que redirijirá el anuncio
+                            }
+                        }
+                    }
+                },
+                "access_token": ACCESS_TOKEN
+            }
+
+            return render(request, "creative.html", {"form": form, "creative":creative})
+
+            '''
+            # Enviar solicitud a Meta para crear el Creative
+            url = f"{BASE_URL}/act_{AD_ACCOUNT_ID}/adcreatives"
+            response = requests.post(url, json=payload)
+            data = response.json()
+
+            if "id" in data:
+                creative.creative_id = data["id"]
+                creative.save()
+                messages.success(request, f"Creative creado con ID: {creative.creative_id}")
+                return redirect("crear_creative")  # Redirige a la página de éxito
+            else:
+                error_msg = data.get("error", {}).get("message", "Error desconocido")
+                messages.error(request, f"Error en Meta: {error_msg}")
+            
+            '''
+        else:
+            print(form.errors)
+            messages.error(request, "Hubo un error al crear el adset. Revisa los campos.")
 
     else:
-        form = AdSetForm()  # Asegurar que se pase un formulario vacío si es GET
+        form = CreativeForm()
 
-    return render(request, 'ad_set.html', {'form': form})
+    # Limpiar mensajes antes de renderizar la página
+    storage = messages.get_messages(request)
+    storage.used = True  
 
+    form = CreativeForm()
 
+    return render(request, "creative.html", {"form": form})
 
-def ad(request):
-    return render(request, 'ad.html')
+def mis_creatives(request):
+    creatives = Creative.objects.all()
+    return render(request, 'mis_creatives.html', {'creatives':creatives})
+

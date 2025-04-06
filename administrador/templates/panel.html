@@ -107,21 +107,6 @@
         vertical-align: middle; /* Alineación vertical */
     }
 
-    .submenu {
-        display: block;
-        padding-left: 20px;
-        list-style: none; /* Quita los puntos de la lista */
-        padding-left: 0; /* Elimina la sangría izquierda */
-    }
-
-    .submenu li {
-        padding-left: 20px; 
-    }
-
-    .submenu.show {
-        display: block;
-    }
-
 
     </style>
 </head>
@@ -176,14 +161,6 @@
             </div>
         </nav>
         <hr> <!-- Línea divisoria -->
-        <!-- Enlace a "Mis anuncios" no hay nada aún -->
-        <a href="#" class="btn btn-light">
-            <img src="{% static 'images/icono_megafono.png' %}" class="icono"> Mis anuncios
-        </a>
-        <!-- Enlace a "Crear anuncio" -->
-        <a href="{% url 'crear_ads' %}" class="btn btn-light">
-            <img src="{% static 'images/icono_mas.png' %}" class="icono"> Crear anuncio
-        </a>
 
         <ul class="navbar-nav">
             <!-- Campañas - Submenú desplegable -->
@@ -200,6 +177,23 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'ad_set' %}">Crear adset</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_adsets' %}">Mis adsets</a></li>
+                </ul>
+            </li>
+            <!-- Ads - Submenú desplegable -->
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/icono_mas.png' %}" class="icono"> Ads</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'crear_ads' %}">Hacer post en X</a></li>
+                    <li><a class="dropdown-item" href="{% url 'ad' %}">Crear ad</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_ads' %}">Mis ads</a></li>
+                </ul>
+            </li>
+            <!-- Creatives - Submenú desplegable -->
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/icono_mas.png' %}" class="icono"> Creatives</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'crear_creative' %}">Crear creative</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_creatives' %}">Mis creatives</a></li>
                 </ul>
             </li>
         </ul>

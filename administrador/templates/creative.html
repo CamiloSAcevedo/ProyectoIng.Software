@@ -1,0 +1,113 @@
+{% extends 'panel.html' %}
+{% block content %}
+<h2>Aquí se podrán definir los creatives</h2>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: auto;
+        margin-top: 50px; 
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+
+    .card-custom {
+        width: 900px;  
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        border-radius: 10px; 
+    }
+
+    .form-text {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+
+    .alert {
+        animation: fadeOut 6s ease-in-out forwards;
+    }
+</style>
+
+<div class="form-container">
+    <div class="card-container">
+        
+        <div class="card card-custom">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                        {{ message }}
+                        {% if message.tags == 'success' %}
+                            <a href="{% url 'mis_creatives' %}" class="btn btn-primary btn-sm">Ver mis creatives</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <h2>Crear Creative</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}">Ingresa un nombre para el creative:</label>
+                    {{ form.nombre }}
+                    <small class="form-text">Este será el título interno que identificarás en el sistema.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Ingresa name (títlulo):</label>
+                    {{ form.name }}
+                    <small class="form-text">Este será el título visible en el anuncio.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.message.id_for_label }}">Ingresa el mensaje:</label>
+                    {{ form.message }}
+                    <small class="form-text">Texto principal que aparece en la parte superior del anuncio.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.body.id_for_label }}">Ingresa el cuerpo:</label>
+                    {{ form.body }}
+                    <small class="form-text">Texto secundario debajo de la imagen, que da más contexto o detalles.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.image_url.id_for_label }}">URL de la imagen:</label>
+                    {{ form.image_url }}
+                    <small class="form-text">Debe ser una URL válida de una imagen (recomendado 1.91:1 para Meta).</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.call_to_action.id_for_label }}">Selecciona un call to action:</label>
+                    {{ form.call_to_action }}
+                    <small class="form-text">El botón que el usuario verá, como “Más información” o “Comprar”.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.nombre.id_for_label }}">Ingresa el link</label>
+                    {{ form.link }}
+                    <small class="form-text">Dirección web a la que será dirigido el usuario cuando haga clic en el anuncio.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Crear Creative</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}

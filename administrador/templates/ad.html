@@ -1,5 +1,131 @@
 {% extends 'panel.html' %}
 
 {% block content %}
-<h2>Aquí se podrán definir las métricas de los anuncios</h2>
+<h2>Aquí se podrán definir las métricas de los ads</h2>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-help {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-top: 3px;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;  
+        margin-top: 50px; 
+    }
+
+    .card-custom {
+        width: 900px;  
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        border-radius: 10px; 
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+
+    .alert {
+        animation: fadeOut 6s ease-in-out forwards;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="form-container">
+    <div class="card-container">
+        <div class="card card-custom">
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li><strong>{{ field|title }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert 
+                        {% if message.tags == 'success' %}alert-success
+                        {% elif message.tags == 'error' %}alert-danger{% endif %} 
+                        alert-dismissible fade show" role="alert">
+                        
+                        {{ message }}
+
+                        {% if message.tags == 'success' %}
+                            <a href="{% url 'mis_ads' %}" class="btn btn-primary btn-sm">Ver ads creados</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <h2>Crear Ad</h2>
+
+            <form method="POST" action="{% url 'ad' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_nombre">Nombre del ad</label>
+                    {{ form.nombre }}
+                    <span class="form-help">Asigna un nombre identificador para este anuncio.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_red_social">Selecciona la red social</label>
+                    {{ form.red_social }}
+                    <span class="form-help">Selecciona la red donde se publicará el anuncio.</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Actualizar</button> 
+            </form>
+
+            {% if red_social %}
+                {% if red_social == "X" %}
+                    <a href="{% url 'crear_ads' %}" class="btn">Hacer un post en X</a>
+                {% endif %}
+
+                {% if red_social == "facebook" or red_social == "instagram" %}
+                    <h3>Completa los datos para {{ red_social|title }}</h3>
+
+                    <form method="POST" action="{% url 'crear_ad' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nombre" value="{{ form.nombre.value }}">
+                        <input type="hidden" name="red_social" value="{{ form.red_social.value }}">
+
+                        <div class="form-group">
+                            <label for="id_adset_id">Adset ID</label>
+                            {{ form.adset_id }}
+                            <span class="form-help">Ingresa el ID del ad set al que pertenece este anuncio.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_creative_id">Creative ID</label>
+                            {{ form.creative_id }}
+                            <span class="form-help">Ingresa el ID del contenido creativo que se usará.</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Crear ad</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

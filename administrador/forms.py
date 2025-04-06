@@ -1,26 +1,21 @@
 from django import forms
-from .models import Campaign, AdSet, Ad
+from .models import Campaign, AdSet, Ad, Creative
 
 class CampaignForm(forms.ModelForm):
     class Meta:
         model = Campaign
-        fields = ['nombre', 'red_social', 'hashtags', 'objective', 'formato']
+        fields = ['nombre', 'red_social', 'objective']
     
     def __init__(self, *args, **kwargs):
         red_social = kwargs.pop('red_social', None)  # Extraer red_social
         super().__init__(*args, **kwargs)
 
-        # Ocultar los campos adicionales por defecto
-        self.fields['hashtags'].widget = forms.HiddenInput()
         self.fields['objective'].widget = forms.HiddenInput()
-        self.fields['formato'].widget = forms.HiddenInput()
 
         # Mostrar los campos dependiendo de la red social seleccionada
-        if red_social == 'tiktok':
-            self.fields['hashtags'].widget = forms.TextInput(attrs={'placeholder': 'Ingresa hashtags'})
-        elif red_social in ['facebook', 'instagram']:
-            self.fields['formato'].widget = forms.TextInput()
+        if red_social in ['facebook', 'instagram']: 
             self.fields['objective'].widget = forms.Select(choices=Campaign.OBJECTIVES)
+        # elif red_social == 'X':   (Por definir)
 
 class AdSetForm(forms.ModelForm):
     class Meta:
@@ -29,39 +24,25 @@ class AdSetForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        '''
-        # Ocultar los campos adicionales por defecto
-        self.fields['hashtags'].widget = forms.HiddenInput()
-        self.fields['objective'].widget = forms.HiddenInput()
-        self.fields['formato'].widget = forms.HiddenInput()
 
-        # Mostrar los campos dependiendo de la red social seleccionada
-        if red_social == 'tiktok':
-            self.fields['hashtags'].widget = forms.TextInput(attrs={'placeholder': 'Ingresa hashtags'})
-        elif red_social in ['facebook', 'instagram']:
-            self.fields['formato'].widget = forms.TextInput()
-            self.fields['objective'].widget = forms.Select(choices=Campaign.OBJECTIVES)'
-        '''
 
 class AdForm(forms.ModelForm):
     class Meta:
         model = Ad
-        fields = ['nombre', 'adset_id', 'status', 'creative', 'access_token']
+        fields = ['nombre', 'adset_id', 'status', 'creative_id', 'red_social']
     
     def __init__(self, *args, **kwargs):
         red_social = kwargs.pop('red_social', None)  # Extraer red_social
         super().__init__(*args, **kwargs)
 
-        '''
-        # Ocultar los campos adicionales por defecto
-        self.fields['hashtags'].widget = forms.HiddenInput()
-        self.fields['objective'].widget = forms.HiddenInput()
-        self.fields['formato'].widget = forms.HiddenInput()
+        if red_social:
+            self.fields['red_social'].initial = red_social
 
-        # Mostrar los campos dependiendo de la red social seleccionada
-        if red_social == 'tiktok':
-            self.fields['hashtags'].widget = forms.TextInput(attrs={'placeholder': 'Ingresa hashtags'})
-        elif red_social in ['facebook', 'instagram']:
-            self.fields['formato'].widget = forms.TextInput()
-            self.fields['objective'].widget = forms.Select(choices=Campaign.OBJECTIVES)
-        '''
+
+class CreativeForm(forms.ModelForm):
+    class Meta:
+        model = Creative
+        fields = ['nombre', 'name', 'message', 'body', 'image_url', 'link', 'call_to_action']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

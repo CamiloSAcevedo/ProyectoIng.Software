@@ -39,8 +39,14 @@ urlpatterns = [
     path('ad_set/', adminViews.ad_set, name='ad_set'),
     path('crear_adset/', adminViews.crear_adset, name='crear_adset'),
     path('mis_adsets/', adminViews.mis_adsets, name='mis_adsets'),
+    # Ad
     path('ad/', adminViews.ad, name='ad'),
-
+    path('crear_ad/', adminViews.crear_ad, name='crear_ad'),
+    path('mis_ads/', adminViews.mis_ads, name='mis_ads'),
+    #Creative
+    #path('creative/', adminViews.creative, name='creative'),
+    path('crear_creative/', adminViews.crear_creative, name='crear_creative'),
+    path('mis_creatives/', adminViews.mis_creatives, name='mis_creatives'),
 ]
 
 # Configure Admin Titles

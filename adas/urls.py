@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from adas import views as adasViews
+from administrador import views as adminViews
 
 
 urlpatterns = [
@@ -25,7 +27,26 @@ urlpatterns = [
     path('administrador/', include('administrador.urls')),
     path('autenticacion/', include('autenticacion.urls')),
     path('autenticacion/', include('django.contrib.auth.urls')),
-
+    path('', adasViews.home, name='home'),
+    path('panel/', adminViews.panel, name='panel'),
+    path('estadisticas/', adminViews.estadisticas, name='estadisticas'),
+    # Campaña
+    path('campaña/', adminViews.campaña, name='campaña'),
+    path('crear_campaña/', adminViews.crear_campaña, name='crear_campaña'),
+    path('mis_campañas/', adminViews.mis_campañas, name='mis_campañas'),
+    # AdSet
+    path('obtener_optimization_goals/', adminViews.obtener_optimization_goals, name='obtener_optimization_goals'),
+    path('ad_set/', adminViews.ad_set, name='ad_set'),
+    path('crear_adset/', adminViews.crear_adset, name='crear_adset'),
+    path('mis_adsets/', adminViews.mis_adsets, name='mis_adsets'),
+    # Ad
+    path('ad/', adminViews.ad, name='ad'),
+    path('crear_ad/', adminViews.crear_ad, name='crear_ad'),
+    path('mis_ads/', adminViews.mis_ads, name='mis_ads'),
+    #Creative
+    #path('creative/', adminViews.creative, name='creative'),
+    path('crear_creative/', adminViews.crear_creative, name='crear_creative'),
+    path('mis_creatives/', adminViews.mis_creatives, name='mis_creatives'),
 ]
 
 # Configure Admin Titles

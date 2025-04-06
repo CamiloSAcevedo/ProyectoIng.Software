@@ -1,0 +1,110 @@
+{% extends 'panel.html' %}
+
+{% block content %}
+<h2>Aquí se podrán definir las métricas de las campañas</h2>
+
+<style>
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-help {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-top: 3px;
+    }
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;  
+        margin-top: 50px; 
+    }
+
+    .card-custom {
+        width: 900px;  
+        padding: 20px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        border-radius: 10px; 
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+
+    .alert {
+        animation: fadeOut 6s ease-in-out forwards;
+    }
+</style>
+
+<div class="form-container">
+    <div class="card-container">
+        <div class="card card-custom">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert 
+                        {% if message.tags == 'success' %}alert-success
+                        {% elif message.tags == 'error' %}alert-danger{% endif %} 
+                        alert-dismissible fade show" role="alert">
+                        
+                        {{ message }}
+
+                        {% if message.tags == 'success' %}
+                            <a href="{% url 'mis_campañas' %}" class="btn btn-primary btn-sm">Ver campañas creadas</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <h2>Crear Campaña</h2>
+
+            <!-- Primer formulario: Captura los datos iniciales -->
+            <form method="POST" action="{% url 'campaña' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_nombre">Nombre de la campaña</label>
+                    {{ form.nombre }}
+                    <span class="form-help">Escribe un nombre que te ayude a identificar la campaña fácilmente.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_red_social">Selecciona la red social</label>
+                    {{ form.red_social }}
+                    <span class="form-help">Selecciona en qué red social se publicará la campaña.</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Actualizar</button> 
+            </form>
+
+            {% if red_social %}
+                <h3>Completa los datos para {{ red_social|title }}</h3>
+
+                <form method="POST" action="{% url 'crear_campaña' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="nombre" value="{{ form.nombre.value }}">
+                    <input type="hidden" name="red_social" value="{{ form.red_social.value }}">
+
+                    {% if red_social == "facebook" or red_social == "instagram" %}
+                        <div class="form-group">
+                            <label for="id_objective">Selecciona el objetivo</label>
+                            {{ form.objective }}
+                            <span class="form-help">Define el objetivo principal de tu campaña.</span>
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary">Crear campaña</button>
+                </form>
+            {% endif %}
+            
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

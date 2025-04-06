@@ -1,0 +1,25 @@
+{% extends 'panel.html' %} 
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Mis ads</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for ad in ads %}
+        <div class="col">
+            <div class="card border rounded-3 shadow-sm p-3">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ ad.nombre }}</h5>
+                    <p class="card-text"><strong>Id de adset: </strong>{{ ad.adset_id}}</p>
+                    <!--
+                    {% if adset.campaign_id %}
+                    <p class="card-text"><strong>Id: </strong> {{ adset.campaign_id}}</p>
+                    {% endif %}
+                    -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

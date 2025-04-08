@@ -4,7 +4,7 @@
     {% load static %}
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Escala de la página (me falta es para movil)-->
-    <link rel="icon" type="image/x-icon" href="{% static 'images/ico_logo.ico' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo_ico.ico' %}">
     <title>ADAS</title>
 
     <!-- Bootstrap -->
@@ -73,6 +73,13 @@
             color: white; /* Color de letra */
         }
 
+        .active-link {
+        font-weight: bold;
+        color: #000 !important; /* forzamos el color negro */
+        /*border-bottom: 2px solid #000;*/
+        padding-bottom: 2px;
+        }
+
     </style>
 </head>
 
@@ -80,11 +87,15 @@
 
 <!-- Navbar con botones -->
 <nav class="navbar navbar-expand-lg"> <!-- Barra de navegación -->
-    <div class="container-fluid"> <!-- Contenedor de la barra de navegación -->
-        <!-- Logo -->
-        <a class="navbar-brand" href="{% url 'home' %}">
-            <img src="{% static 'images/LogoADAS.png' %}" alt="Logo ADAS">
+    <div class="container">
+        <!-- Logo ADAS (fuera del ul de navegación) -->
+        <a class="navbar-brand" href="{% url 'inicio' %}">
+          <img src="{% static 'images/Logo_ADAS.png' %}" alt="Logo ADAS" height="40">
         </a>
+    
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
         <!-- Navegación + botones a la derecha -->
         <div class="d-flex ms-auto align-items-center gap-3">
@@ -92,9 +103,17 @@
             <ul class="navbar-nav flex-row gap-3 mb-0">
 
                 <!-- Por ahora estos botones no funcionan -->
-                <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Nosotros</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Servicios</a></li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active == 'inicio' %}active-link{% endif %}" href="{% url 'inicio' %}">Inicio</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if active == 'nosotros' %}active-link{% endif %}" href="{% url 'nosotros' %}">Nosotros</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if active == 'servicios' %}active-link{% endif %}" href="{% url 'servicios' %}">Servicios</a>
+                </li>
             </ul>
 
             <!-- Botones para autenticación -->

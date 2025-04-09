@@ -1,5 +1,6 @@
 {% extends 'panel.html' %}
 {% block content %}
+{% load static %}
 
 <style>
     .form-group {
@@ -97,7 +98,7 @@
             <div class="col">
                     <!-- Vista previa del anuncio -->
                     <div class="preview-card">
-                        <img id="preview-image" class="preview-image" src="{{ creative.image_url }}" alt="Vista previa de la imagen">
+                        <img id="preview-image" class="preview-image" src="{% static 'images/creative_image.jpg' %}" alt="Vista previa de la imagen">
                         <div class="preview-content">
                             <div id="preview-message" class="preview-title">{{ creative.message }}</div>
                             <div id="preview-name" class="preview-body">{{ creative.name }}</div>

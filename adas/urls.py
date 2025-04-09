@@ -24,6 +24,10 @@ from administrador import views as adminViews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('inicio/', views.inicio, name='inicio'),
+    path('nosotros/', views.nosotros, name='nosotros'),
+    path('servicios/', views.servicios, name='servicios'),
+
     path('administrador/', include('administrador.urls')),
     path('autenticacion/', include('autenticacion.urls')),
     path('autenticacion/', include('django.contrib.auth.urls')),

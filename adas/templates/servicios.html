@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f8fbfb; /* Color de fondo gris claro */
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Nuestros Servicios</h1>
+        <p class="fs-5 text-secondary">Automatiza la publicación de tus anuncios y haz crecer tu presencia en redes sociales fácilmente.</p>
+    </div>
+
+    <!-- Tarjetas de servicios -->
+    <div class="row justify-content-center">
+        <!-- Servicio: Twitter -->
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 shadow text-center p-4">
+                <img src="{% static 'images/twitter_logo.png' %}" alt="Twitter" class="mx-auto" style="height: 80px;">
+                <h4 class="fw-bold mt-3">Automatización en X (Twitter)</h4>
+                <p>Publica tus twitts de forma automática en X sin preocuparte por los horarios ni la constancia. Ahorra tiempo y mantén tu comunidad activa con solo unos clics.</p>
+            </div>
+        </div>
+
+        <!-- Servicio: Meta (Facebook + Instagram) -->
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 shadow text-center p-4">
+                <img src="{% static 'images/meta_logo.png' %}" alt="Meta" class="mx-auto" style="height: 80px;">
+                <h4 class="fw-bold mt-3">Automatización en Meta</h4>
+                <p>Gestiona tus campañas en Facebook y futuramente en Instagram desde una sola plataforma. Nuestra herramienta te permite programar y lanzar anuncios efectivos para llegar a más clientes.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje final -->
+    <div class="text-center mt-5">
+        <h3 class="fw-bold">🚀 Lleva tu negocio al siguiente nivel 🚀</h3>
+        <p class="fs-5 text-secondary">Con nuestra plataforma, la publicidad en redes sociales está al alcance de todos. ¡Empieza a automatizar hoy mismo!</p>
+    </div>
+</div>
+
+{% endblock content %}

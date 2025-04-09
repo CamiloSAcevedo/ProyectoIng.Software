@@ -10,6 +10,15 @@ from django.shortcuts import render
 def home(request):
     return render(request, 'home.html')
 
+def nosotros(request):
+    return render(request, 'nosotros.html',  {'active': 'nosotros'})
+
+def servicios(request):
+    return render(request, 'servicios.html', {'active': 'servicios'})
+
+def inicio(request):
+    return render(request, 'home.html', {'active': 'inicio'})
+
 """
 def alerts(request):
     alertass=Alert.objects.all()

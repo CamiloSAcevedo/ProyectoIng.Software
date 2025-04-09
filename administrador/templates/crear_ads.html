@@ -1,23 +1,34 @@
-{% extends 'panel.html' %} 
+{% extends 'panel.html' %}
 
 {% block content %}
 
-<h2 class="mb-4">Crear Anuncios</h2>
+<h2 class="mb-4">Crear Anuncio en X</h2>
 
-<!-- Estilo para que el mensaje se desaparezca despues de cierto tiempo (de que el anuncio se publico correctamente)-->
 <style>
+    /* Esto es animación para desvanecer las alertas */
 @keyframes fadeOut {
     0% { opacity: 1; }
     90% { opacity: 1; }
     100% { opacity: 0; display: none; }
 }
+.alert { animation: fadeOut 2s ease-in-out forwards; }
 
-.alert {
-    animation: fadeOut 2s ease-in-out forwards;
+/* Estilo para el botón de publicar */
+
+.btn-publicar {
+    background-color: #4e4e4e;
+    border-color: #000000;
+    color: white;
+    font-weight: bold;
+}
+.btn-publicar:hover {
+    background-color: #545454;
+    border-color: #000000;
+    color: black;
 }
 </style>
 
-<!-- Mostrar mensajes de publicación exitosa o no-->
+<!-- Mostrar mensajes de éxito o error -->
 {% if messages %}
     {% for message in messages %}
         <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %}">
@@ -26,31 +37,151 @@
     {% endfor %}
 {% endif %}
 
-<!-- Publicación  en X -->
-<style>
-    .btn-publicar { /* apariencia de botón publicar twett*/
-        background-color: #4e4e4e; /* color de fondo de boton */
-        border-color: #000000; /* color de borde*/
-        color: white; /*color de la letra*/
-        font-weight: bold; /* letra negrita */
-    }
-    .btn-publicar:hover { /*Como se ve el boton el pasar el mouse*/
-        background-color: #545454; /* Naranja más oscuro */
-        border-color: #000000; /* color del borde */
-        color: black; /* color de la letra al pasar mouse */
-    }
-</style>
+<!-- Formulario para crear anuncios -->
+<form method="POST">
+    {% csrf_token %} <!-- Token de seguridad para CSRF -->
 
-<form method="POST"> <!-- POST, enviar datos al servidor -->
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="tweet" class="form-label">Escribe tu tweet con la información de la vacante:</label>
-        <textarea id="tweet" name="tweet" class="form-control" rows="3" required></textarea> <!-- Requiere que escribas algo para enviar el tweet -->
+    <!-- Toggle para cambiar entre formulario estructurado y entrada libre -->
+    <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" id="toggleForm" onchange="toggleInputMode()">
+        <label class="form-check-label" for="toggleForm">Usar texto libre</label>
     </div>
+
+    <!-- Formulario estructurado -->
+    <div id="structuredForm">
+        <!-- Campo para el título de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Vacante:</label>
+            <input type="text" class="form-control" id="vacante">
+        </div>
+        <!-- Campo para la ubicación -->
+        <div class="mb-2">
+            <label class="form-label">Ubicación:</label>
+            <input type="text" class="form-control" id="ubicacion">
+        </div>
+        <!-- Campo para el tipo de contrato -->
+        <div class="mb-2">
+            <label class="form-label">Contrato:</label>
+            <input type="text" class="form-control" id="contrato">
+        </div>
+        <!-- Campo para el salario -->
+        <div class="mb-2">
+            <label class="form-label">Salario:</label>
+            <input type="text" class="form-control" id="salario">
+        </div>
+        <!-- Campo para la descripción de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Descripción:</label>
+            <textarea class="form-control" id="descripcion" rows="2"></textarea>
+        </div>
+        <!-- Campo para el Call to Action -->
+        <div class="mb-2">
+            <label class="form-label">Call to Action:</label>
+            <input type="text" class="form-control" id="cta" value="👉 Interesad@s, enviar HV en la web de Magneto.">
+        </div>
+
+         <!-- Selección de hashtags -->
+        <div class="mb-2">
+            <label class="form-label">Hashtags:</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input hashtag-check" type="checkbox" value="#Empleo">
+                <label class="form-check-label">#Empleo</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input hashtag-check" type="checkbox" value="#BuscoTrabajo">
+                <label class="form-check-label">#BuscoTrabajo</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input hashtag-check" type="checkbox" value="#Vacantes">
+                <label class="form-check-label">#Vacantes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input hashtag-check" type="checkbox" value="#TrabajoYa">
+                <label class="form-check-label">#TrabajoYa</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input hashtag-check" type="checkbox" value="#TrabajoRemoto">
+                <label class="form-check-label">#TrabajoRemoto</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input hashtag-check" type="checkbox" value="#OportunidadLaboral">
+                <label class="form-check-label">#OportunidadLaboral</label>
+            </div>
+
+            <!-- Campo para agregar un hashtag personalizado -->
+            <input type="text" class="form-control mt-2" placeholder="Otro hashtag opcional" id="otroHashtag">
+        </div>
+    </div>
+
+    <!-- Entrada libre para escribir el tweet manualmente -->
+    <div class="mb-3" id="manualInput" style="display:none;">
+        <label class="form-label">Escribe tu tweet con la información de la vacante:</label>
+        <textarea id="tweetManual" class="form-control" rows="4"></textarea>
+    </div>
+
+    <!-- Vista previa del tweet -->
+    <div class="mb-3">
+        <label class="form-label">Vista previa del Tweet:</label>
+        <div class="border p-3 bg-light" id="tweetPreview" style="white-space:pre-wrap;"></div>
+    </div>
+
+    <!-- Campo oculto para enviar el tweet final -->
+    <input type="hidden" name="tweet" id="tweetFinal">
+
+    <!-- Botón para publicar el "anuncio" -->
     <button type="submit" class="btn btn-publicar w-100">
         <i class="fas fa-bullhorn"></i> Publicar Vacante
     </button>
 </form>
-<!-- End Publicación  en X -->
+
+<script>
+/* Alternar entre el formulario estructurado y la entrada libre */
+function toggleInputMode() {
+    const checked = document.getElementById("toggleForm").checked;
+    document.getElementById("structuredForm").style.display = checked ? "none" : "block";
+    document.getElementById("manualInput").style.display = checked ? "block" : "none";
+    updatePreview();
+}
+
+/* Actualizar la vista previa del tweet */
+function updatePreview() {
+    const isManual = document.getElementById("toggleForm").checked;
+    let tweet = "";
+
+    if (isManual) {
+        // Si está en modo manual, tomar el texto del campo manual
+        tweet = document.getElementById("tweetManual").value;
+    } else {
+        // Si está en modo estructurado, construir el tweet con los campos del formulario
+        const vacante = document.getElementById("vacante").value;
+        const ubicacion = document.getElementById("ubicacion").value;
+        const contrato = document.getElementById("contrato").value;
+        const salario = document.getElementById("salario").value;
+        const descripcion = document.getElementById("descripcion").value;
+        const cta = document.getElementById("cta").value;
+        const hashtags = [...document.querySelectorAll(".hashtag-check:checked")].map(h => h.value);
+        const otroHashtag = document.getElementById("otroHashtag").value;
+        if (otroHashtag) hashtags.push(otroHashtag.startsWith("#") ? otroHashtag : "#" + otroHashtag);
+
+        // Construir el tweet con los datos ingresados
+        tweet = `💼 Vacante: ${vacante}\n📍 Ubicación: ${ubicacion}\n📝 Contrato: ${contrato}\n💰 Salario: $ ${salario}\n🧾 Descripción: ${descripcion}\n\n${cta}\n\n${hashtags.join(" ")}`;
+    }
+
+    // Actualizar la vista previa y el campo oculto
+    document.getElementById("tweetPreview").innerText = tweet;
+    document.getElementById("tweetFinal").value = tweet;
+}
+
+// Escuchar cambios en los campos para actualizar la vista previa
+document.querySelectorAll("input, textarea").forEach(elem => {
+    elem.addEventListener("input", updatePreview);
+});
+document.querySelectorAll(".hashtag-check").forEach(elem => {
+    elem.addEventListener("change", updatePreview);
+});
+
+// Actualizar la vista previa al cargar la página
+window.onload = updatePreview;
+</script>
 
 {% endblock %}

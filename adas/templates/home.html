@@ -3,23 +3,28 @@
 {% block content %} <!-- Bloque de contenido -->
 
 <style>
+/* Estilos para la página de inicio */
+    body {
+        background-color: #f8fbfb; /* Color de fondo gris claro */
+    }
 
-.btn-click { /* Botón personalizado (crear anuncios) */
-    background-color: #ffc26c; /* naranjita */
-    color: black; /* Texto en negro */
-    border: none; 
-    border-radius: 8px; /*Borde redondito*/
-    padding: 10px 20px; /* margenes entre boton y otras cosas */
-    transition: 0.3s; /* transicion al pasar el mouse*/
-}
 
-.btn-click:hover { /* Color de fondo al pasar el mouse */
-    background-color: #a0c1e7; /* Azul más oscuro en hover */
-}
+    .btn-click { /* Botón personalizado (crear anuncios) */
+        background-color: #ffc26c; /* naranjita */
+        color: black; /* Texto en negro */
+        border: none; 
+        border-radius: 8px; /*Borde redondito*/
+        padding: 10px 20px; /* margenes entre boton y otras cosas */
+        transition: 0.3s; /* transicion al pasar el mouse*/
+    }
+
+    .btn-click:hover { /* Color de fondo al pasar el mouse */
+        background-color: #a0c1e7; /* Azul más oscuro en hover */
+    }
 </style>
 
 <!-- Sección principal web -->
-<div class="container mt-2"> <!-- container me centra el contenido y me da margenes lat. (mt-2, es el margen sup.) -->
+<div class="container mt-5"> <!-- container me centra el contenido y me da margenes lat. (mt-2, es el margen sup.) -->
     <div class="row align-items-center"> <!-- me alinea contenido de las columnas al centro -->
         <!-- Sección de Texto -->
         <div class="col-md-5 text-start"> <!-- ocupa 5 de las 12 columnas en disp. medianos y text-start me alinea a izquierda -->
@@ -43,7 +48,7 @@
 
         <!-- Imagen ajustada -->
         <div class="col-md-7 text-end"> <!-- Imagen más a la derecha -->
-            <img src="{% static 'images/image_homep.png' %}" class="img-fluid" alt="image_homep">
+            <img src="{% static 'images/homepage.png' %}" class="img-fluid" alt="image_homep">
         </div>
     </div>
 </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon del sitio web (imagen.ico) -->
-    <link rel="icon" type="image/x-icon" href="{% static 'images/ico_logo.ico' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo_ico.ico' %}">
     <!-- Título de la página -->
     <title>Panel de administrador</title>
 
@@ -107,7 +107,6 @@
         vertical-align: middle; /* Alineación vertical */
     }
 
-
     </style>
 </head>
 
@@ -155,17 +154,17 @@
             <div class="container">
                 <a class="navbar-brand" href="/"> <!-- Enlace a la página de inicio -->
                     <div class="logo-container">
-                        <img src="{% static 'images/LogoADAS.png' %}" alt="Logo ADAS"> <!-- Imagen del logo -->
+                        <img src="{% static 'images/Logo_ADAS.png' %}" alt="Logo ADAS"> <!-- Imagen del logo -->
                     </div>
                 </a>
             </div>
         </nav>
-        <hr> <!-- Línea divisoria -->
+    
 
         <ul class="navbar-nav">
             <!-- Campañas - Submenú desplegable -->
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/icono_mas.png' %}" class="icono">Campañas</a>
+                <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/campana_icono.png' %}" class="icono">Campañas</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'campaña' %}">Crear campaña</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_campañas' %}">Mis campañas</a></li>
@@ -173,7 +172,7 @@
             </li>
             <!-- Ad sets - Submenú desplegable -->
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/icono_mas.png' %}" class="icono"> Ad sets</a>
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/adset_icono.png' %}" class="icono"> Ad sets</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'ad_set' %}">Crear adset</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_adsets' %}">Mis adsets</a></li>
@@ -181,7 +180,7 @@
             </li>
             <!-- Ads - Submenú desplegable -->
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/icono_mas.png' %}" class="icono"> Ads</a>
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/ad_icono.png' %}" class="icono"> Ads</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'crear_ads' %}">Hacer post en X</a></li>
                     <li><a class="dropdown-item" href="{% url 'ad' %}">Crear ad</a></li>
@@ -190,7 +189,7 @@
             </li>
             <!-- Creatives - Submenú desplegable -->
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/icono_mas.png' %}" class="icono"> Creatives</a>
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/creative_icono.png' %}" class="icono"> Creatives</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'crear_creative' %}">Crear creative</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_creatives' %}">Mis creatives</a></li>
@@ -201,17 +200,17 @@
       
         <!-- Enlace a "Estadísticas" -->
         <a href="#" class="btn btn-light">
-            <img src="{% static 'images/icono_grafico.png' %}" class="icono"> Estadisticas
+            <img src="{% static 'images/estadisticas_icono.png' %}" class="icono"> Estadisticas
         </a>
         <!-- Enlace a "Perfil" -->
         <a href="#" class="btn btn-light">
-            <img src="{% static 'images/icono_usuario.png' %}" class="icono"> Perfil
+            <img src="{% static 'images/user_icono.png' %}" class="icono"> Perfil
         </a>
         <!-- Botón de cerrar sesión -->
         <div class="logout-container">
-            <hr> <!-- Línea divisoria -->
+            <hr>
             <a href="{% url 'logout' %}" class="btn btn-logout w-100">
-                <img src="{% static 'images/icono_salir.png' %}" class="icono"> Cerrar sesión
+                <img src="{% static 'images/logout_icono.png' %}" class="icono"> Cerrar sesión
             </a>
         </div>
     </div>

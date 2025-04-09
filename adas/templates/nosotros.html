@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f8fbfb; /* Color de fondo gris claro */
+    }
+    /*    <!-- Fila 1: Significado del logo -->
+    <div class="row d-flex align-items-center mt-5 mb-4">
+        <div class="col-md-4 text-center mb-3 mb-md-0">
+            <img src="{% static 'images/logo_adas.png' %}" alt="Logo ADAS" class="img-fluid" style="max-height: 120px;">
+        </div>
+        <div class="col-md-8">
+            <h3 class="fw-bold">Nuestro logo:</h3>
+            <p>
+                El nombre <strong>ADAS</strong> significa <em>Ad Automatic System</em>. Representa nuestra visión de facilitar la creación de campañas publicitarias automatizadas, sin complicaciones y al alcance de todos.
+                El diseño del logo busca transmitir dinamismo, simplicidad y tecnología, reflejando nuestra esencia como equipo innovador y apasionado por resolver problemas reales.
+            </p>
+        </div>
+    </div>*/
+</style>
+
+<!-- Sección "Nosotros" -->
+<div class="container mt-5 mb-5">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">¿Qué es ADAS?</h1>
+        <!-- <p class="fs-5 text-secondary">Un proyecto con propósito y aprendizaje real 🚀</p> -->
+    </div>
+
+    <!-- Fila 2: Imagen + texto -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <img src="{% static 'images/nosotros_4.jpg' %}" alt="Equipo trabajando" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-md-6">
+            <h3 class="fw-bold">Nuestro primer proyecto web</h3>
+            <p>
+                Este es nuestro primer acercamiento al desarrollo de una página web completa. 
+                A través de este proyecto, hemos aprendido a integrar distintas tecnologías como 
+                <strong>Django</strong>, <strong>HTML</strong>, <strong>CSS</strong> y <strong>Bootstrap</strong>.
+                No solo fue una experiencia técnica, también ha sido un reto creativo que nos impulsó a explorar el mundo del desarrollo web de forma práctica.
+            </p>
+        </div>
+    </div>
+
+    <!-- Fila 3: Texto + Imagen -->
+    <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-6">
+            <img src="{% static 'images/nosotros_ads.png' %}" alt="Automatización de anuncios" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-md-6">
+            <h3 class="fw-bold">Automatización al alcance de todos</h3>
+            <p>
+                Nuestra misión es simplificar el proceso de publicación de anuncios en redes sociales. 
+                Sabemos que no todos los negocios tienen el tiempo o los conocimientos para gestionar campañas publicitarias, 
+                por eso desarrollamos una plataforma sencilla, intuitiva y accesible que permite hacerlo en segundos.
+            </p>
+        </div>
+    </div>
+
+    <!-- Fila 4: Texto con fondo -->
+    <div class="bg-light p-5 rounded shadow">
+        <h3 class="fw-bold text-center mb-3">💡¿Qué nos inspira?💡</h3>
+        <p class="fs-5 text-center">
+            Nos motiva la idea de usar la tecnología como herramienta para potenciar negocios, conectar oportunidades y facilitar procesos.
+            Este proyecto es solo el comienzo, queremos seguir aprendiendo y construyendo soluciones que aporten valor real.
+        </p>
+    </div>
+</div>
+
+{% endblock content %}

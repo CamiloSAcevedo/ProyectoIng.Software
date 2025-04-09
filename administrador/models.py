@@ -1,5 +1,8 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
+
+
 
 class Campaign(models.Model):
     REDES_SOCIALES = [
@@ -63,12 +66,17 @@ class AdSet(models.Model):
     def __str__(self):
         return self.nombre
 
-    
+
 class Ad(models.Model):
     REDES_SOCIALES = [
         ('facebook', 'Facebook'),
         ('instagram', 'Instagram'),
         ('X', 'X'),
+    ]
+    ESTADOS = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
     ]
     
     adset_id= models.CharField(max_length=100, blank=True)
@@ -76,13 +84,17 @@ class Ad(models.Model):
     red_social = models.CharField(max_length=20, choices=REDES_SOCIALES, default='facebook')
     nombre = models.CharField(max_length=250)
     status = models.CharField(max_length=100, blank=True)
-
+    texto = models.TextField(blank=True, null=True)  # Texto del anuncio
     #Adicionales (no están en el formulario)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ads')
     ad_id= models.CharField(blank=True, max_length=100)
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='PENDIENTE', help_text="Estado del anuncio")
+    comentario_admin = models.TextField(blank=True, null=True, help_text="Comentario del administrador al aprobar o rechazar")
     created_at = models.DateField(default=date.today)
 
     def __str__(self):
         return self.nombre
+
 
 
 class Creative(models.Model):

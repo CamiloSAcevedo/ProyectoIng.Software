@@ -10,7 +10,7 @@
             <div class="card border rounded-3 shadow-sm p-3">
                 <div class="card-body">
                     <h5 class="card-title fw-bold">{{ ad.texto }}</h5>
-                    <p class="card-text"><strong>Autor:</strong> {{ ad.autor.username }}</p>
+                    <p class="card-text"><strong>Autor:</strong> {{ ad.usuario.username }}</p>
                     <p class="card-text"><strong>Estado:</strong> {{ ad.estado }}</p>
                     <a href="{% url 'actualizar_estado_ad' ad.id %}" class="btn btn-primary">Revisar</a>
                 </div>

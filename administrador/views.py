@@ -44,6 +44,15 @@ def estadisticas(request):
 def crear_ads(request):
     return render(request, 'crear_ads.html')
 
+#---------------------- KEYS API X ----------------------#
+
+client = tweepy.Client(
+    consumer_key=settings.TWITTER_API_KEY,
+    consumer_secret=settings.TWITTER_API_SECRET,
+    access_token=settings.TWITTER_ACCESS_TOKEN,
+    access_token_secret=settings.TWITTER_ACCESS_SECRET
+)
+
 
 #---------------------- APROBACIÓN O RECHAZO ADS ----------------------#
 #Vista para listar anuncios pendientes
@@ -88,12 +97,7 @@ def mis_solicitudes_ads(request):
 # ---------------------- API DE X ----------------------#
 # Configurar autenticación con Tweepy
 # Autenticación con la API v2
-client = tweepy.Client(
-    consumer_key=settings.TWITTER_API_KEY,
-    consumer_secret=settings.TWITTER_API_SECRET,
-    access_token=settings.TWITTER_ACCESS_TOKEN,
-    access_token_secret=settings.TWITTER_ACCESS_SECRET
-)
+
 
 @login_required
 def crear_ads(request):

@@ -1,20 +1,24 @@
-#import tweepy
+import tweepy
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-#from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 #from .models import AuthorizedPersonnel
 #from .models import Alert
 from .forms import CampaignForm, AdSetForm, AdForm, CreativeForm
 from .models import Campaign, AdSet, Ad, Creative
 from django. http import JsonResponse 
-
 import requests
 import os
 from dotenv import load_dotenv
+from django.contrib.auth.decorators import user_passes_test
 
 # Cargar variables desde el .env
 load_dotenv()
+
+# Verificar que el usuario es staff (administrador)
+def es_staff(user):
+    return user.is_authenticated and user.is_staff
 
 # Obtener valores
 
@@ -27,10 +31,12 @@ PAGE_ID = os.getenv("PAGE_ID")
 # Create your views here.
 #@login_required esto es de autenticacion
 
+
+
 def panel(request):
     return render(request, 'panel.html')
 
-#@login_required
+@login_required
 def estadisticas(request):
     return render(request, 'estadisticas.html')
 
@@ -39,7 +45,46 @@ def crear_ads(request):
     return render(request, 'crear_ads.html')
 
 
-'''
+#---------------------- APROBACIÓN O RECHAZO ADS ----------------------#
+#Vista para listar anuncios pendientes
+@user_passes_test(lambda u: u.is_staff)
+def revisar_ads_pendientes(request):
+    ads_pendientes = Ad.objects.filter(estado='PENDIENTE')
+    return render(request, "ads_pendientes.html", {"ads": ads_pendientes})
+
+# Vista para actualizar estado y comentario
+@user_passes_test(lambda u: u.is_staff)
+def aprobar_ad(request, ad_id):
+    ad = get_object_or_404(Ad, id=ad_id)
+
+    if request.method == "POST":
+        nuevo_estado = request.POST.get("estado")
+        comentario = request.POST.get("comentario")
+
+        ad.estado = nuevo_estado
+        ad.comentario_admin = comentario
+
+        try:
+            if nuevo_estado == "Aprobado":
+                # Publicar en X (Twitter)
+                client.create_tweet(text=ad.texto)
+                messages.success(request, "Anuncio aprobado y publicado en X (Twitter).")
+            else:
+                messages.success(request, "Estado del anuncio actualizado.")
+        except Exception as e:
+            messages.error(request, f"Error al publicar el tweet: {str(e)}")
+
+        ad.save()
+        return redirect("revisar_ads_pendientes")
+
+    return render(request, "aprobar_ad.html", {"ad": ad})
+
+# Vista para listar estado anuncios (usuario normal)
+@login_required
+def mis_solicitudes_ads(request):
+    ads = Ad.objects.filter(usuario=request.user)
+    return render(request, "mis_solicitudes_ads.html", {"ads": ads})
+
 # ---------------------- API DE X ----------------------#
 # Configurar autenticación con Tweepy
 # Autenticación con la API v2
@@ -50,21 +95,23 @@ client = tweepy.Client(
     access_token_secret=settings.TWITTER_ACCESS_SECRET
 )
 
-#@login_required
+@login_required
 def crear_ads(request):
     if request.method == "POST":
         tweet_text = request.POST.get("tweet")
         if tweet_text:
             try:
-                client.create_tweet(text=tweet_text)  # Publica el tweet
-                messages.success(request, "¡Tweet publicado correctamente!")
+                #client.create_tweet(text=tweet_text)  # Publica el tweet
+                #messages.success(request, "¡Tweet publicado correctamente!")
+                ad = Ad.objects.create(texto=tweet_text, usuario= request.user)
+                messages.success(request, "¡El anuncio fue enviado para aprobación!")
             except Exception as e:
                 messages.error(request, f"Error al publicar el tweet: {str(e)}")
 
         return redirect("crear_ads")  # Redirecciona a la misma página
     
     return render(request, "crear_ads.html")
-'''
+
 
 # ---------------------- CREAR CAMPAÑA META ----------------------#
 def campaña(request):

@@ -207,6 +207,23 @@
         <a href="#" class="btn btn-light">
             <img src="{% static 'images/icono_usuario.png' %}" class="icono"> Perfil
         </a>
+        <!-- Enlace a administración ads -->
+        {% if request.user.is_staff %}
+            <!-- Solo para staff -->
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'revisar_ads_pendientes' %}">
+                    <img src="{% static 'images/icono_mas.png' %}" class="icono"> Revisar ads pendientes
+                </a>
+            </li>
+        {% endif %}
+
+        <!-- Visible para todos los usuarios -->
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'mis_solicitudes_ads' %}">
+                <img src="{% static 'images/icono_mas.png' %}" class="icono"> Mis solicitudes de ads
+            </a>
+        </li>
+
         <!-- Botón de cerrar sesión -->
         <div class="logout-container">
             <hr> <!-- Línea divisoria -->

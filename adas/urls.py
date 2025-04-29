@@ -51,6 +51,10 @@ urlpatterns = [
     #path('creative/', adminViews.creative, name='creative'),
     path('crear_creative/', adminViews.crear_creative, name='crear_creative'),
     path('mis_creatives/', adminViews.mis_creatives, name='mis_creatives'),
+    # Administración de ads
+    path("ads-pendientes/", adminViews.revisar_ads_pendientes, name="revisar_ads_pendientes"),
+    path("ads/<int:ad_id>/actualizar-estado/", adminViews.aprobar_ad, name="actualizar_estado_ad"),
+    path("mis-ads/", adminViews.mis_solicitudes_ads, name="mis_solicitudes_ads"),
 ]
 
 # Configure Admin Titles

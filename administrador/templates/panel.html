@@ -84,7 +84,7 @@
 
     .btn-logout:hover { /* Estilo al pasar el mouse sobre el botón de cerrar sesión */
         background-color: transparent; /* Fondo transparente */
-        border-color: black; /* Borde negro */
+        border-color: #ddd; /* Borde negro */
     }
     .icono { /* Estilo de los iconos */
         width: 20px;  /* Ancho del icono */
@@ -162,6 +162,13 @@
 
             <ul class="navbar-nav">
             <!-- Campañas - Submenú desplegable -->
+
+            <a href="{% url 'vacantes' %}" class="btn btn-light">
+                <img src="{% static 'images/vacante_icono.png' %}" class="icono"> Vacantes
+            </a>
+            
+
+
             <li class="nav-item">
 
                 <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/campana_icono.png' %}" class="icono">Campañas</a>
@@ -189,6 +196,17 @@
                     <li><a class="dropdown-item" href="{% url 'crear_ads' %}">Hacer post en X</a></li>
                     <li><a class="dropdown-item" href="{% url 'ad' %}">Crear ad</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_ads' %}">Mis ads</a></li>
+                     <!-- Enlace a administración ads -->
+                    {% if request.user.is_staff %}
+                    <!-- Solo para staff -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'revisar_ads_pendientes' %}"> Revisar ads pendientes</a>
+                    </li>
+                {% endif %}
+                <!-- Visible para todos los usuarios -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'mis_solicitudes_ads' %}">Mis solicitudes de ads</a>
+                    </li>
                 </ul>
             </li>
             <!-- Creatives - Submenú desplegable -->
@@ -212,6 +230,8 @@
         <a href="#" class="btn btn-light">
             <img src="{% static 'images/user_icono.png' %}" class="icono"> Perfil
         </a>
+       
+
         <!-- Botón de cerrar sesión -->
         <div class="logout-container">
             <hr>

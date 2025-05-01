@@ -101,3 +101,4 @@ if __name__ == "__main__":
             # Extraer métricas de la campaña
             metrics = get_campaign_data(campaign_id)
             print("📌 Métricas de la campaña:", metrics)
+

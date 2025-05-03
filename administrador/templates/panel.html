@@ -84,7 +84,7 @@
 
     .btn-logout:hover { /* Estilo al pasar el mouse sobre el botón de cerrar sesión */
         background-color: transparent; /* Fondo transparente */
-        border-color: black; /* Borde negro */
+        border-color: #ddd; /* Borde negro */
     }
     .icono { /* Estilo de los iconos */
         width: 20px;  /* Ancho del icono */
@@ -162,6 +162,13 @@
 
             <ul class="navbar-nav">
             <!-- Campañas - Submenú desplegable -->
+
+            <a href="{% url 'vacantes' %}" class="btn btn-light">
+                <img src="{% static 'images/vacante_icono.png' %}" class="icono"> Vacantes
+            </a>
+            
+
+
             <li class="nav-item">
 
                 <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/campana_icono.png' %}" class="icono">Campañas</a>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Campaign, AdSet, Ad, Creative
+from .models import Campaign, AdSet, Ad, Creative, Vacante
 
 class CampaignForm(forms.ModelForm):
     class Meta:
@@ -46,3 +46,18 @@ class CreativeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+# ---------------------- MIS VACANTES ----------------------#
+class VacanteForm(forms.ModelForm):
+    class Meta:
+        model = Vacante
+        fields = ['vacante', 'empresa', 'ubicacion', 'contrato', 'salario', 'descripcion']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    
+#Cargar excel
+
+class UploadFileForm(forms.Form):
+    archivo = forms.FileField(label='Seleccionar archivo Excel')
+# ---------------------- MIS VACANTES ----------------------#

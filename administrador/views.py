@@ -3,15 +3,20 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 #from .models import AuthorizedPersonnel
 #from .models import Alert
-from .forms import CampaignForm, AdSetForm, AdForm, CreativeForm
-from .models import Campaign, AdSet, Ad, Creative
+from .forms import CampaignForm, AdSetForm, AdForm, CreativeForm, VacanteForm, UploadFileForm
+from .models import Campaign, AdSet, Ad, Creative, Vacante
 from django. http import JsonResponse 
 import requests
 import os
 from dotenv import load_dotenv
 from django.contrib.auth.decorators import user_passes_test
+
+import pandas as pd
+from django.db import IntegrityError
+
 
 # Cargar variables desde el .env
 load_dotenv()
@@ -43,6 +48,9 @@ def estadisticas(request):
 #@login_required
 def crear_ads(request):
     return render(request, 'crear_ads.html')
+
+#def vacantes(request):
+   # return render(request, 'mis_vacantes.html')
 
 #---------------------- KEYS API X ----------------------#
 
@@ -428,3 +436,66 @@ def mis_creatives(request):
     creatives = Creative.objects.all()
     return render(request, 'mis_creatives.html', {'creatives':creatives})
 
+# ---------------------- VER MIS VACANTES ----------------------#
+
+def mis_vacantes(request):
+    if request.method == 'POST':
+        # Obtén los datos del formulario
+        vacante = request.POST.get('vacante')
+        empresa = request.POST.get('empresa')
+        ubicacion = request.POST.get('ubicacion')
+        contrato = request.POST.get('contrato')
+        salario = request.POST.get('salario')
+        descripcion = request.POST.get('descripcion')
+
+        # Verifica que todos los campos obligatorios estén completos
+        if not all([vacante, empresa, ubicacion, contrato, salario]):
+            return render(request, 'mis_vacantes.html', {
+                'error': 'Por favor, completa todos los campos obligatorios.',
+                'vacantes': Vacante.objects.all()
+            })
+
+        # Guarda la nueva vacante en la base de datos
+        Vacante.objects.create(
+            vacante=vacante,
+            empresa=empresa,
+            ubicacion=ubicacion,
+            contrato=contrato,
+            salario=salario,
+            descripcion=descripcion
+        )
+        return redirect('mis_vacantes')  # Redirige a la misma página después de guardar
+
+    # Manejar la búsqueda de vacantes
+    query = request.GET.get('q')  # Obtén el término de búsqueda del parámetro 'q'
+    if query:
+        # Filtrar las vacantes que coincidan con el término de búsqueda
+        vacantes = Vacante.objects.filter(
+            Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
+            Q(empresa__icontains=query)   # Buscar en el campo 'empresa'
+        )
+    else:
+        # Si no hay término de búsqueda, muestra todas las vacantes
+        vacantes = Vacante.objects.all()
+
+    return render(request, 'mis_vacantes.html', {'vacantes': vacantes})
+
+
+
+def cargar_excel(request):
+    if request.method == 'POST':
+        archivo = request.FILES.get('archivo_excel')
+        if archivo:
+            df = pd.read_excel(archivo)  #  pd.read_csv(archivo) si es CSV
+            for _, row in df.iterrows():
+                Vacante.objects.create(
+                    vacante=row['vacante'],
+                    empresa=row['empresa'],
+                    ubicacion=row['ubicacion'],
+                    contrato=row['contrato'],
+                    salario=row['salario'],
+                    descripcion=row.get('descripcion', '')
+                )
+        return redirect('vacantes')
+    
+# ------------------------------------------------------------#

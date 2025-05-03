@@ -119,3 +119,17 @@ class Creative(models.Model):
 
     def __str__(self):
         return self.nombre
+
+# ---------------------- VACANTES ----------------------#
+class Vacante(models.Model):
+    vacante = models.CharField(max_length=255)
+    empresa = models.TextField(max_length=100)
+    ubicacion = models.CharField(max_length=255)
+    contrato = models.CharField(max_length=100)
+    salario = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.vacante
+    
+# ----------------------------------------------------#

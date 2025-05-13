@@ -1,0 +1,48 @@
+{% extends 'panel.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if tipo == 'post' %}
+        <h1 class="mb-4">Mis solicitudes de posts</h1>
+    {% endif %}
+    {% if tipo == 'ad' %}
+        <h1 class="mb-4">Mis solicitudes de anuncios</h1>
+    {% endif %}
+
+    <!-- Selector de estado -->
+    <form method="get" class="mb-4">
+    <div class="row">
+            <div class="col-md-4">
+                <select name="estado" class="form-select" onchange="this.form.submit()">
+                    <option value="" {% if not estado_seleccionado %}selected{% endif %}>Todos</option>
+                    <option value="Aprobado" {% if estado_seleccionado == "Aprobado" %}selected{% endif %}>Aprobado</option>
+                    <option value="Rechazado" {% if estado_seleccionado == "Rechazado" %}selected{% endif %}>Rechazado</option>
+                    <option value="Pendiente" {% if estado_seleccionado == "Pendiente" %}selected{% endif %}>Pendiente</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for contenido in contenidoo %}
+        <div class="col">
+            <div class="card border rounded-3 shadow-sm p-3">
+                <div class="card-body">
+                    {% if tipo == 'post' %}
+                    <h5 class="card-title fw-bold">{{ contenido.texto }}</h5>
+                    {% endif %}
+                    {% if tipo == 'ad' %}
+                    <h5 class="card-title fw-bold">{{ contenido.nombre }}</h5>
+                    {% endif %}
+                    <p class="card-text"><strong>Estado:</strong> {{ contenido.revision.estado }}</p>
+                    {% if contenido.revision.comentario_admin %}
+                        <p class="card-text"><strong>Comentario:</strong> {{ contenido.revision.comentario_admin }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

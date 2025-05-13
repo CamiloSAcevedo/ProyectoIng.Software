@@ -2,10 +2,15 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">Revisión del Anuncio</h2>
+    <h2 class="mb-4">Revisión de {{ tipo|title }}</h2>
     <div class="card p-4 shadow-sm">
-        <p><strong>Texto:</strong> {{ ad.texto }}</p>
-        <p><strong>Autor:</strong> {{ ad.usuario.username }}</p>
+        {% if tipo == 'post' %}
+            <h5 class="card-title fw-bold">{{ contenido.texto }}</h5>
+        {% endif %}
+        {% if tipo == 'ad' %}
+            <h5 class="card-title fw-bold">{{ contenido.nombre }}</h5>
+        {% endif %}
+        <p><strong>Autor:</strong> {{ contenido.revision.usuario.username }}</p>
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">

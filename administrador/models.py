@@ -150,6 +150,10 @@ class Vacante(models.Model):
     contrato = models.CharField(max_length=100)
     salario = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
+    industria = models.CharField(max_length=100, null=True)
+    modalidad = models.CharField(max_length=50, choices=[('Remoto', 'Remoto'), ('Presencial', 'Presencial'), ('Híbrido', 'Híbrido')], null=True)
+    experiencia = models.CharField(max_length=100, null=True)
+    grupo = models.IntegerField(null=True, blank=True) # Para clustering
 
     def __str__(self):
         return self.vacante

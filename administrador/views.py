@@ -469,9 +469,9 @@ def crear_creative(request):
                 "access_token": ACCESS_TOKEN
             }
 
-            #return render(request, "creative.html", {"form": form, "creative":creative})
+            return render(request, "creative.html", {"form": form, "creative":creative})
 
-            #'''
+            '''
             # Enviar solicitud a Meta para crear el Creative
             url = f"{BASE_URL}/act_{AD_ACCOUNT_ID}/adcreatives"
             response = requests.post(url, json=payload)
@@ -541,8 +541,9 @@ def mis_vacantes(request):
     if query:
         # Filtrar las vacantes que coincidan con el término de búsqueda
         vacantes = Vacante.objects.filter(
-            Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
-            Q(empresa__icontains=query)   # Buscar en el campo 'empresa'
+            #Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
+            #Q(empresa__icontains=query) |   # Buscar en el campo 'empresa'
+            Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
         )
     else:
         # Si no hay término de búsqueda, muestra todas las vacantes
@@ -564,7 +565,10 @@ def cargar_excel(request):
                     ubicacion=row['ubicacion'],
                     contrato=row['contrato'],
                     salario=row['salario'],
-                    descripcion=row.get('descripcion', '')
+                    descripcion=row.get('descripcion', ''),
+                    industria=row.get('industria', ''),
+                    modalidad=row.get('modalidad', ''),
+                    experiencia=row.get('experiencia', '')
                 )
         return redirect('vacantes')
     

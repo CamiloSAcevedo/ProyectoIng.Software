@@ -13,6 +13,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from django.contrib.auth.decorators import user_passes_test
+from .utils.ai import generar_message_creative, generar_body_creative
 from django.urls import reverse
 
 import pandas as pd
@@ -435,6 +436,21 @@ def crear_ad_meta(request, ad):
 def mis_ads(request):
     ads = Ad.objects.all()
     return render(request, 'mis_ads.html', {'ads': ads})
+
+# ---------------------- GENERAR TEXTO CON IA PARA CREATIVES----------------------#
+
+def generar_message_ia(request):
+    if request.method == "POST":
+        prompt = request.POST.get("prompt", "")
+        texto = generar_message_creative(prompt)
+        return JsonResponse({"texto": texto})
+
+def generar_body_ia(request):
+    if request.method == "POST":
+        prompt = request.POST.get("prompt", "")
+        texto = generar_body_creative(prompt)
+        return JsonResponse({"texto": texto})
+
 
 # ---------------------- CREAR CREATIVE META  ----------------------#
 

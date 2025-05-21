@@ -5,6 +5,9 @@ urlpatterns = [
     path('panel/', views.panel, name='panel'),  
     path('estadisticas/', views.estadisticas, name='estadisticas'), 
 
+    path('creative/generar-message/', views.generar_message_ia, name='generar_message_ia'),
+    path('creative/generar-body/', views.generar_body_ia, name='generar_body_ia'),
+
     # Post X
     path('crear_post/', views.crear_post, name='crear_post'),
     # Campaña

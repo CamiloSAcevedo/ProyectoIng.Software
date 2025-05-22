@@ -11,7 +11,7 @@
     90% { opacity: 1; }
     100% { opacity: 0; display: none; }
 }
-.alert { animation: fadeOut 2s ease-in-out forwards; }
+.alert { animation: fadeOut 10s ease-in-out forwards; }
 
 /* Estilo para el botón de publicar */
 
@@ -54,6 +54,11 @@
             <label class="form-label">Vacante:</label>
             <input type="text" class="form-control" id="vacante">
         </div>
+        <!-- Campo para la empresa -->
+        <div class="mb-2">
+            <label class="form-label">Empresa:</label>
+            <input type="text" class="form-control" id="empresa">
+        </div>  
         <!-- Campo para la ubicación -->
         <div class="mb-2">
             <label class="form-label">Ubicación:</label>
@@ -119,17 +124,29 @@
         <textarea id="tweetManual" class="form-control" rows="4"></textarea>
     </div>
 
-    <!-- Vista previa del tweet -->
-    <div class="mb-3">
-        <label class="form-label">Vista previa del Tweet:</label>
-        <div class="border p-3 bg-light" id="tweetPreview" style="white-space:pre-wrap;"></div>
+
+    <!-- Vista previa del tweet para el formulario estructurado -->
+    <div class="mb-3" id="structuredPreview" style="display: block;">
+        <label class="form-label">Vista previa del Tweet (Formulario):</label>
+        <div class="border p-3 bg-light" id="tweetPreviewStructured" style="white-space:pre-wrap;"></div>
+        <small id="charCountPreviewStructured" class="text-muted">280 caracteres restantes</small>
+        <small id="errorStructured" class="text-danger" style="display: none;">Has superado el límite de 280 caracteres.</small>
+    </div>
+
+
+<!-- Vista previa del tweet para el texto libre -->
+    <div class="mb-3" id="manualPreview" style="display: none;">
+        <label class="form-label">Vista previa del Tweet (Texto Libre):</label>
+        <div class="border p-3 bg-light" id="tweetPreviewManual" style="white-space:pre-wrap;"></div>
+        <small id="charCountManual" class="text-muted">280 caracteres restantes</small>
+        <small id="errorManual" class="text-danger" style="display: none;">Has superado el límite de 280 caracteres.</small>
     </div>
 
     <!-- Campo oculto para enviar el tweet final -->
     <input type="hidden" name="tweet" id="tweetFinal">
 
     <!-- Botón para publicar el "anuncio" -->
-    <button type="submit" class="btn btn-publicar w-100">
+    <button type="submit" class="btn btn-publicar w-100" id="publishButton" disabled>
         <i class="fas fa-bullhorn"></i> Publicar Vacante
     </button>
 </form>
@@ -138,8 +155,17 @@
 /* Alternar entre el formulario estructurado y la entrada libre */
 function toggleInputMode() {
     const checked = document.getElementById("toggleForm").checked;
+
+
+    // Mostrar/Ocultar los formularios
     document.getElementById("structuredForm").style.display = checked ? "none" : "block";
     document.getElementById("manualInput").style.display = checked ? "block" : "none";
+
+    // Mostrar/Ocultar las vistas previas
+    document.getElementById("structuredPreview").style.display = checked ? "none" : "block";
+    document.getElementById("manualPreview").style.display = checked ? "block" : "none";
+
+
     updatePreview();
 }
 
@@ -151,9 +177,12 @@ function updatePreview() {
     if (isManual) {
         // Si está en modo manual, tomar el texto del campo manual
         tweet = document.getElementById("tweetManual").value;
+        document.getElementById("tweetPreviewManual").innerText = tweet;
+        updateCharCount("manual", tweet.length);
     } else {
         // Si está en modo estructurado, construir el tweet con los campos del formulario
         const vacante = document.getElementById("vacante").value;
+        const empresa = document.getElementById("empresa").value;
         const ubicacion = document.getElementById("ubicacion").value;
         const contrato = document.getElementById("contrato").value;
         const salario = document.getElementById("salario").value;
@@ -164,12 +193,52 @@ function updatePreview() {
         if (otroHashtag) hashtags.push(otroHashtag.startsWith("#") ? otroHashtag : "#" + otroHashtag);
 
         // Construir el tweet con los datos ingresados
-        tweet = `💼 Vacante: ${vacante}\n📍 Ubicación: ${ubicacion}\n📝 Contrato: ${contrato}\n💰 Salario: $ ${salario}\n🧾 Descripción: ${descripcion}\n\n${cta}\n\n${hashtags.join(" ")}`;
+        tweet = `💼Vacante: ${vacante}\n🏢Empresa: ${empresa}\n📍Ubicación: ${ubicacion}\n📝Contrato: ${contrato}\n💰Salario: $ ${salario}\n🧾Descripción: ${descripcion}\n\n${cta}\n\n${hashtags.join(" ")}`;
+        document.getElementById("tweetPreviewStructured").innerText = tweet;
+        updateCharCount("structured", tweet.length);
     }
 
-    // Actualizar la vista previa y el campo oculto
-    document.getElementById("tweetPreview").innerText = tweet;
+    // Actualizar el campo oculto con el tweet final
     document.getElementById("tweetFinal").value = tweet;
+}
+
+/* Actualizar el contador de caracteres y manejar errores */
+function updateCharCount(type, length) {
+    const maxChars = 280;
+    const remaining = Math.max(0, maxChars - length); // Asegúrate de que el valor mínimo sea 0
+    const publishButton = document.getElementById("publishButton");
+
+    if (type === "manual") {
+        const charCountManual = document.getElementById("charCountManual");
+        const errorManual = document.getElementById("errorManual");
+
+        charCountManual.innerText = `${remaining} caracteres restantes`;
+
+        if (length > maxChars) {
+            charCountManual.classList.add("text-danger");
+            errorManual.style.display = "block";
+            publishButton.disabled = true;
+        } else {
+            charCountManual.classList.remove("text-danger");
+            errorManual.style.display = "none";
+            publishButton.disabled = false;
+        }
+    } else if (type === "structured") {
+        const charCountStructured = document.getElementById("charCountPreviewStructured");
+        const errorStructured = document.getElementById("errorStructured");
+
+        charCountStructured.innerText = `${remaining} caracteres restantes`;
+
+        if (length > maxChars) {
+            charCountStructured.classList.add("text-danger");
+            errorStructured.style.display = "block";
+            publishButton.disabled = true;
+        } else {
+            charCountStructured.classList.remove("text-danger");
+            errorStructured.style.display = "none";
+            publishButton.disabled = false;
+        }
+    }
 }
 
 // Escuchar cambios en los campos para actualizar la vista previa

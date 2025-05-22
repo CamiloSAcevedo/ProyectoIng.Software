@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+{% extends 'panel.html' %}
+{% block content %}
+
+<style>
+    .search-actions-container {
+    display: flex; /* Usar Flexbox para alinear los elementos */
+    flex-wrap: wrap; /* Permitir que los elementos se ajusten en varias líneas si es necesario */
+    gap: 15px; /* Espaciado entre los elementos */
+    align-items: center; /* Alinear verticalmente los elementos */
+    justify-content: flex-start; /* Alinear los elementos a la izquierda */
+    margin-bottom: 20px; /* Espaciado inferior */
+    }
+
+    .search-form {
+    display: flex; /* Alinear la barra de búsqueda y el botón Buscar en una fila */
+    gap: 10px; /* Espaciado entre la barra de búsqueda y el botón */
+    }
+
+    .search-input {
+    border: 2px solid #3dc971; /* Cambiar el color del borde */
+    border-radius: 25px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno */
+    outline: none; /* Eliminar el contorno al hacer clic */
+    width: 300px; /* Ancho fijo */
+    font-size: 16px; /* Tamaño de la fuente */
+    transition: border-color 0.3s ease; /* Animación al enfocar */
+    box-sizing: border-box; /* Incluir padding y borde en el ancho */
+    }
+
+    .btn-primary {
+    background-color: #3dc971; /* Color de fondo */
+    border: none; /* Sin borde */
+    color: white; /* Color del texto */
+    border-radius: 25px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+    font-weight: bold; /* Texto en negrita */
+    transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-primary:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+    }
+
+    .btn-pill {
+        background-color: #3dc971;
+        border: none;
+        color: white;
+        border-radius: 25px;
+        padding: 8px 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-pill:hover {
+        background-color: #9ee4b8;
+    }
+    .btn-escribir {
+        background-color: #3dc971;
+        border: none;
+        color: white;
+        border-radius: 25px;
+        padding: 8px 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-escribir:hover {
+        background-color: #9ee4b8;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+</style>
+
+<h2>Mis vacantes</h2>
+
+<div class="search-actions-container">
+    <!-- Barra de búsqueda -->
+    <form method="get" class="search-form">
+        <input type="text" name="q" class="search-input" placeholder="Buscar vacantes..." value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
+    <!-- Botón Cargar (Excel) -->
+    <form method="post" action="{% url 'cargar_excel' %}" enctype="multipart/form-data" id="form-excel">
+        {% csrf_token %}
+        <label for="excelInput" class="btn-pill">Cargar</label>
+        <input type="file" name="archivo_excel" id="excelInput" onchange="document.getElementById('form-excel').submit();">
+    </form>
+
+    <!-- Botón Ingresar manual -->
+    <button class="btn-escribir" onclick="mostrarFormulario()">Ingresar</button>
+</div>
+
+<!-- Formulario Manual -->
+<div id="formulario-vacante" style="display: none; margin-top: 1em;">
+    <form method="post">
+        {% csrf_token %}
+        <!-- Campo para el título de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Vacante:</label>
+            <input type="text" class="form-control" name="vacante" id="vacante">
+        </div>
+        <!-- Campo para la empresa -->
+        <div class="mb-2">
+            <label class="form-label">Empresa:</label>
+            <input type="text" class="form-control" name="empresa" id="empresa">
+        </div>
+        <!-- Campo para la ubicación -->
+        <div class="mb-2">
+            <label class="form-label">Ubicación:</label>
+            <input type="text" class="form-control" name="ubicacion" id="ubicacion">
+        </div>
+        <!-- Campo para el tipo de contrato -->
+        <div class="mb-2">
+            <label class="form-label">Contrato:</label>
+            <input type="text" class="form-control" name="contrato" id="contrato">
+        </div>
+        <!-- Campo para el salario -->
+        <div class="mb-2">
+            <label class="form-label">Salario:</label>
+            <input type="text" class="form-control" name="salario" id="salario">
+        </div>
+        <!-- Campo para la descripción de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Descripción:</label>
+            <textarea class="form-control" name="descripcion" id="descripcion" rows="2"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+    </form>
+</div>
+
+<!-- Lista de Vacantes -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for vacante in vacantes %}
+    <div class="col">
+        <div class="card border rounded-3 shadow-sm p-3">
+            <div class="card-body">
+                <h5 class="card-title fw-bold">{{ vacante.vacante }}</h5>
+                <p class="card-text"><strong>Grupo:</strong> {{ vacante.grupo }}</p>
+                <p class="card-text"><strong>Empresa:</strong> {{ vacante.empresa }}</p>
+                <p class="card-text"><strong>Ubicación:</strong> {{ vacante.ubicacion }}</p>
+                <p class="card-text"><strong>Contrato:</strong> {{ vacante.contrato }}</p>
+                <p class="card-text"><strong>Salario:</strong> {{ vacante.salario }}</p>
+                <p class="card-text"><strong>Descripción:</strong> {{ vacante.descripcion }}</p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No hay vacantes disponibles.</p>
+    {% endfor %}
+</div>
+
+<script>
+    function mostrarFormulario() {
+        const formulario = document.getElementById("formulario-vacante");
+        const boton = document.querySelector(".btn-escribir");
+
+        if (formulario.style.display === "none" || formulario.style.display === "") {
+            formulario.style.display = "block"; // Mostrar el formulario
+            boton.textContent = "Ocultar"; // Cambiar el texto del botón
+        } else {
+            formulario.style.display = "none"; // Ocultar el formulario
+            boton.textContent = "Ingresar"; // Cambiar el texto del botón
+        }
+    }
+
+    document.getElementById("formulario-vacante").querySelector("form").addEventListener("submit", function (event) {
+    const vacante = document.getElementById("vacante").value;
+    const empresa = document.getElementById("empresa").value;
+    const ubicacion = document.getElementById("ubicacion").value;
+    const contrato = document.getElementById("contrato").value;
+    const salario = document.getElementById("salario").value;
+
+
+    if (!vacante || !empresa || !ubicacion || !contrato || !salario) {
+        alert("Por favor, completa todos los campos obligatorios.");
+        event.preventDefault(); // Evita que el formulario se envíe
+    }
+    });
+
+    // Detectar cambios en el campo de búsqueda
+    const searchInput = document.querySelector('.search-input');
+    searchInput.addEventListener('input', function () {
+        if (this.value.trim() === '') {
+            // Si el campo está vacío, recargar la página para mostrar todas las vacantes
+            window.location.href = window.location.pathname;
+        }
+    });
+
+</script>
+
+
+
+{% endblock %}

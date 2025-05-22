@@ -101,3 +101,29 @@ if __name__ == "__main__":
             # Extraer métricas de la campaña
             metrics = get_campaign_data(campaign_id)
             print("📌 Métricas de la campaña:", metrics)
+
+
+def crear_ad(request):
+    if request.method == "POST":
+        form = AdForm(request.POST)  
+        if form.is_valid():
+            ad = form.save(commit=False)  
+            
+            ad.save()  # TO-DO: Eliminar este save para guardarlo cuando ya se haya recibido el id de meta
+            messages.success(request, "¡Los datos de ad set se ingresaron exitosamente!")
+
+            return redirect('crear_ad')
+        
+        else:
+            print(ad.errors)
+            messages.error(request, "Hubo un error al crear el ad. Revisa los campos.") 
+
+    
+    # Limpiar mensajes antes de renderizar la página
+    storage = messages.get_messages(request)
+    storage.used = True  
+
+    form = AdForm()
+
+    return render(request, 'ad.html', {'form': form})
+

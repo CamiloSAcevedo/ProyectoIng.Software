@@ -77,7 +77,7 @@
 
             <h2>Crear Ad</h2>
 
-            <form method="POST" action="{% url 'ad' %}">
+            <form method="POST" action="{% url 'crear_ad' %}">
                 {% csrf_token %}
 
                 <div class="form-group">
@@ -87,43 +87,22 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_red_social">Selecciona la red social</label>
-                    {{ form.red_social }}
-                    <span class="form-help">Selecciona la red donde se publicará el anuncio.</span>
+                    <label for="id_adset_id">Adset ID</label>
+                    {{ form.adset_id }}
+                    <span class="form-help">Selecciona el nombre del ad set al que pertenece este anuncio.</span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Actualizar</button> 
+                <div class="form-group">
+                    <label for="id_creative_id">Creative ID</label>
+                    {{ form.creative_id }}
+                    <span class="form-help">Selecciona el nombre del contenido creativo que se usará.</span>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Crear ad</button> 
             </form>
 
-            {% if red_social %}
-                {% if red_social == "X" %}
-                    <a href="{% url 'crear_ads' %}" class="btn">Hacer un post en X</a>
-                {% endif %}
-
-                {% if red_social == "facebook" or red_social == "instagram" %}
-                    <h3>Completa los datos para {{ red_social|title }}</h3>
-
-                    <form method="POST" action="{% url 'crear_ad' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="nombre" value="{{ form.nombre.value }}">
-                        <input type="hidden" name="red_social" value="{{ form.red_social.value }}">
-
-                        <div class="form-group">
-                            <label for="id_adset_id">Adset ID</label>
-                            {{ form.adset_id }}
-                            <span class="form-help">Ingresa el ID del ad set al que pertenece este anuncio.</span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_creative_id">Creative ID</label>
-                            {{ form.creative_id }}
-                            <span class="form-help">Ingresa el ID del contenido creativo que se usará.</span>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Crear ad</button>
-                    </form>
-                {% endif %}
-            {% endif %}
+    
         </div>
     </div>
 </div>

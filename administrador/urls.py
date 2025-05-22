@@ -4,9 +4,12 @@ from . import views
 urlpatterns = [
     path('panel/', views.panel, name='panel'),  
     path('estadisticas/', views.estadisticas, name='estadisticas'), 
-
+    
+    # Gemini 
     path('creative/generar-message/', views.generar_message_ia, name='generar_message_ia'),
     path('creative/generar-body/', views.generar_body_ia, name='generar_body_ia'),
+    path('buscar_vacante/', views.buscar_vacante, name='buscar_vacante'),
+
 
     # Post X
     path('crear_post/', views.crear_post, name='crear_post'),

@@ -23,26 +23,32 @@ def generar_texto_ads(prompt):
     except Exception as e:
         return f"Error al generar el texto: {e}"
 
-def generar_message_creative(prompt):
+def generar_message_creative(prompt, vacante_info=""):
     try:
         response = model.generate_content(f"""
-        Genera un texto para el mensaje de un creative de meta ads. Debe ser directo, profesional y llamar la atención.
-        Usa un tono publicitario profesional. Máximo 150 caracteres. No se pondrá un enlace. Quiero que sea detallado, y trata de usar casi el límite de caracteres.
+        Genera un texto para el mensaje de un creative de Meta Ads. Debe ser directo, profesional y llamar la atención.
+        Usa un tono publicitario profesional. Máximo 200 caracteres. No se pondrá un enlace.
 
         Prompt del usuario: {prompt}
+
+        Información relevante de la vacante:
+        {vacante_info}
         """)
-        return response.text.strip()[:150]
+        return response.text.strip()[:200]
     except Exception as e:
         return f"Error al generar el message: {e}"
 
-def generar_body_creative(prompt):
+def generar_body_creative(prompt, vacante_info=""):
     try:
         response = model.generate_content(f"""
         Genera un cuerpo de anuncio para un creative de Meta que proporcione contexto adicional y motive a la acción.
-        Usa un tono publicitario profesional. Máximo 300 caracteres. No se pondrá un enlace. Quiero que sea detallado, y trata de usar casi el límite de caracteres.
+        Usa un tono publicitario profesional. Máximo 500 caracteres. No se pondrá un enlace. Quiero que sea detallado, y trata de usar casi el límite de caracteres.
 
         Prompt del usuario: {prompt}
+        
+        Información relevante de la vacante:
+        {vacante_info}
         """)
-        return response.text.strip()[:300]
+        return response.text.strip()[:500]
     except Exception as e:
         return f"Error al generar el body: {e}"

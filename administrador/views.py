@@ -438,17 +438,63 @@ def mis_ads(request):
     return render(request, 'mis_ads.html', {'ads': ads})
 
 # ---------------------- GENERAR TEXTO CON IA PARA CREATIVES----------------------#
+# para búsqueda de vacantes
+
+def buscar_vacante(request):
+    q = request.GET.get("q", "")
+    resultados = Vacante.objects.filter(vacante__icontains=q)[:10]
+    data = [{"id": v.id, "vacante": v.vacante} for v in resultados]
+    return JsonResponse(data, safe=False)
+
+
+
 
 def generar_message_ia(request):
     if request.method == "POST":
         prompt = request.POST.get("prompt", "")
-        texto = generar_message_creative(prompt)
+        vacante_id = request.POST.get("vacante_id")
+
+        vacante_info = ""
+        if vacante_id:
+            try:
+                vacante = Vacante.objects.get(id=vacante_id)
+                vacante_info = f"""
+                Vacante: {vacante.vacante}
+                Empresa: {vacante.empresa}
+                Ubicación: {vacante.ubicacion}
+                Modalidad: {vacante.modalidad}
+                Salario: {vacante.salario}
+                Experiencia: {vacante.experiencia}
+                Descripción: {vacante.descripcion}
+                """
+            except Vacante.DoesNotExist:
+                pass
+
+        texto = generar_message_creative(prompt, vacante_info)
         return JsonResponse({"texto": texto})
 
 def generar_body_ia(request):
     if request.method == "POST":
         prompt = request.POST.get("prompt", "")
-        texto = generar_body_creative(prompt)
+        vacante_id = request.POST.get("vacante_id")
+
+        vacante_info = ""
+        if vacante_id:
+            try:
+                vacante = Vacante.objects.get(id=vacante_id)
+                vacante_info = f"""
+                Vacante: {vacante.vacante}
+                Empresa: {vacante.empresa}
+                Ubicación: {vacante.ubicacion}
+                Modalidad: {vacante.modalidad}
+                Salario: {vacante.salario}
+                Experiencia: {vacante.experiencia}
+                Descripción: {vacante.descripcion}
+                """
+            except Vacante.DoesNotExist:
+                pass
+
+        texto = generar_body_creative(prompt, vacante_info)
         return JsonResponse({"texto": texto})
 
 
@@ -557,8 +603,8 @@ def mis_vacantes(request):
     if query:
         # Filtrar las vacantes que coincidan con el término de búsqueda
         vacantes = Vacante.objects.filter(
-            #Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
-            #Q(empresa__icontains=query) |   # Buscar en el campo 'empresa'
+            Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
+            Q(empresa__icontains=query) |   # Buscar en el campo 'empresa'
             Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
         )
     else:

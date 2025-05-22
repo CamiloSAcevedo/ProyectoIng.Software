@@ -46,19 +46,19 @@
 
 <script>
     $(document).ready(function () {
-        $("#campaign_id").on("change", function () {
-            var campaignId = $(this).val();  
+        $("#id_campaign_id").on("change", function () {
+            var campaignId = $(this).val();
 
             if (campaignId) {
                 console.log("Enviando solicitud para campaign_id:", campaignId);
                 $.ajax({
-                    url: "{% url 'obtener_optimization_goals' %}", 
-                    data: {"campaign_id": campaignId},
+                    url: "{% url 'obtener_optimization_goals' %}",
+                    data: { "campaign_id": campaignId },
                     dataType: "json",
                     success: function (response) {
                         console.log("Respuesta recibida:", response);
                         var select = $("#optimization_goal");
-                        select.empty(); 
+                        select.empty();
 
                         if (response.optimization_goals.length > 0) {
                             $.each(response.optimization_goals, function (index, goal) {
@@ -77,6 +77,7 @@
         });
     });
 </script>
+
 
 <div class="form-container">
     <div class="card-container">
@@ -104,9 +105,9 @@
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="campaign_id">Campaign ID</label>
-                    <input type="text" id="campaign_id" name="campaign_id">
-                    <span class="form-help">Ingresa el ID de la campaña a la que pertenecerá este ad set.</span>
+                    <label for="campaign_id">Campaign</label>
+                    {{ form.campaign_id }}
+                    <span class="form-help">Selecciona el nombre de la campaña a la que pertenecerá este adset.</span>
                 </div>
 
                 <div class="form-group">

@@ -1,0 +1,38 @@
+{% extends 'panel.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{{ tipo|title }} pendientes</h2>
+
+    {% if contenidoo %}
+    <p>A continuación se encuentran todas las solicitudes que necesitan revisión.</p>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for contenido in contenidoo %}
+        <div class="col">
+            <div class="card border rounded-3 shadow-sm p-3">
+                <div class="card-body">
+                    {% if tipo == 'post' %}
+                    <h5 class="card-title fw-bold">{{ contenido.texto }}</h5>
+                    {% endif %}
+                    {% if tipo == 'ad' %}
+                    <h5 class="card-title fw-bold">{{ contenido.nombre }}</h5>
+                    {% endif %}
+                    
+                    <p class="card-text"><strong>Autor:</strong> {{ contenido.usuario.username }}</p>
+                    <p class="card-text"><strong>Estado:</strong> {{ contenido.revision.estado }}</p>
+                    {% if contenido.pk %}
+                    <a href="{% url 'actualizar_estado_contenido' tipo contenido.pk %}" class="btn btn-primary">Revisar</a>
+                    {% else %}
+                    <span class="text-danger">Sin ID</span>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="text-muted">No hay contenido pendiente para revisión.</p>
+    {% endif %}
+</div>
+{% endblock content %}

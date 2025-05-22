@@ -65,7 +65,7 @@
             <h2>Crear Campaña</h2>
 
             <!-- Primer formulario: Captura los datos iniciales -->
-            <form method="POST" action="{% url 'campaña' %}">
+            <form method="POST" action="{% url 'crear_campaña' %}">
                 {% csrf_token %}
 
                 <div class="form-group">
@@ -75,33 +75,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="id_red_social">Selecciona la red social</label>
-                    {{ form.red_social }}
-                    <span class="form-help">Selecciona en qué red social se publicará la campaña.</span>
+                    <label for="id_objective">Selecciona el objetivo</label>
+                    {{ form.objective }}
+                    <span class="form-help">Define el objetivo principal de tu campaña.</span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Actualizar</button> 
+                <button type="submit" class="btn btn-primary">Crear Campaña</button> 
             </form>
-
-            {% if red_social %}
-                <h3>Completa los datos para {{ red_social|title }}</h3>
-
-                <form method="POST" action="{% url 'crear_campaña' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="nombre" value="{{ form.nombre.value }}">
-                    <input type="hidden" name="red_social" value="{{ form.red_social.value }}">
-
-                    {% if red_social == "facebook" or red_social == "instagram" %}
-                        <div class="form-group">
-                            <label for="id_objective">Selecciona el objetivo</label>
-                            {{ form.objective }}
-                            <span class="form-help">Define el objetivo principal de tu campaña.</span>
-                        </div>
-                    {% endif %}
-
-                    <button type="submit" class="btn btn-primary">Crear campaña</button>
-                </form>
-            {% endif %}
             
         </div>
     </div>

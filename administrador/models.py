@@ -2,28 +2,55 @@ from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
 
-
-
-class Campaign(models.Model):
-    REDES_SOCIALES = [
-        ('facebook', 'Facebook'),
-        ('instagram', 'Instagram'),
-        ('X', 'X'),
+# ---------------------- TABLA PARA REVISIÓN DE ADMINISTRADOR----------------------#
+class Revision(models.Model):
+    ESTADOS = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
     ]
+
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='revisiones')
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='Pendiente')
+    comentario_admin = models.TextField(blank=True, null=True, help_text="Comentario del administrador al aprobar o rechazar")
+    created_at = models.DateField(default=date.today)
+
+    def __str__(self):
+        return f"Revisión por {self.usuario} - {self.estado}"
+    
+# ---------------------- MODELOS X ----------------------#
+class Post(models.Model):
+    ESTADOS = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+    ]
+    
+    nombre = models.CharField(max_length=250)
+    status = models.CharField(max_length=100, blank=True)
+    texto = models.TextField(blank=True, null=True)  # Texto del anuncio
+    revision = models.OneToOneField(Revision, on_delete=models.CASCADE, null=True, blank=True) # Campo para aprovación
+    created_at = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.texto
+
+# ---------------------- MODELOS META ----------------------#
+class Campaign(models.Model):
+    # Keys
+    campaign_id = models.CharField(max_length=255, blank=True, default="") 
     
     OBJECTIVES = [
         ('CONVERSIONS', 'Conversiones'),
-        ('ENGAGEMENT', 'Interacción'),
+        ('POST_ENGAGEMENT', 'Interacción'),
         ('BRAND_AWARENESS', 'Conocimiento de marca'),
         ('LEAD_GENERATION', 'Leads'),
     ]
 
     nombre = models.CharField(max_length=255)
-    red_social = models.CharField(max_length=20, choices=REDES_SOCIALES, default='facebook')
-    objective = models.CharField(max_length=250, choices=OBJECTIVES, default="REACH")  # Facebook
+    objective = models.CharField(max_length=250, choices=OBJECTIVES, default="REACH") 
 
     #Adicionales (no están en el formulario)
-    campaign_id = models.CharField(max_length=255, null=True, blank=True, default="")
     created_at = models.DateField(default=date.today)
 
     def __str__(self):
@@ -31,6 +58,10 @@ class Campaign(models.Model):
     
 
 class AdSet(models.Model):
+    # Keys 
+    adset_id= models.CharField(blank=True, max_length=100) 
+    campaign_id = models.ForeignKey(Campaign, on_delete=models.CASCADE) # FK
+
     #añadir campo targeting
     BILLING_EVENTS = [
         ('IMPRESSIONS', 'CPM (Por cada 1000 impresiones)'),
@@ -39,7 +70,6 @@ class AdSet(models.Model):
         ('POST_ENGAGEMENT', 'Interacciones'),
         ('VIDEO_VIEWS', 'Vistas de video'),
     ]
-
     OPTIMIZATION_GOALS = [
         ('IMPRESSIONS', 'Conversiones'),
         ('REACH', 'Alcance'),
@@ -53,51 +83,21 @@ class AdSet(models.Model):
     ]
 
     nombre = models.CharField(max_length=255)
-    campaign_id = models.CharField(max_length=250)
     daily_budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
-    billing_event = models.CharField(max_length=250, choices=BILLING_EVENTS, blank=True, default="REACH")  # Facebook
-    optimization_goal = models.CharField(max_length=250, choices=OPTIMIZATION_GOALS, blank=True, default="REACH")  # Facebook
+    billing_event = models.CharField(max_length=250, choices=BILLING_EVENTS, blank=True, default="REACH") 
+    optimization_goal = models.CharField(max_length=250, choices=OPTIMIZATION_GOALS, blank=True, default="REACH")  
     status = models.CharField(max_length=255, blank=True)
     
-    #Adicionales (no están en el formulario)
-    adset_id= models.CharField(blank=True, max_length=100)
+    #Adicionales (no están en el formulario
     created_at = models.DateField(default=date.today)
 
     def __str__(self):
         return self.nombre
-
-
-class Ad(models.Model):
-    REDES_SOCIALES = [
-        ('facebook', 'Facebook'),
-        ('instagram', 'Instagram'),
-        ('X', 'X'),
-    ]
-    ESTADOS = [
-        ('PENDIENTE', 'Pendiente'),
-        ('APROBADO', 'Aprobado'),
-        ('RECHAZADO', 'Rechazado'),
-    ]
-    
-    adset_id= models.CharField(max_length=100, blank=True)
-    creative_id = models.CharField(max_length=250, blank=True)
-    red_social = models.CharField(max_length=20, choices=REDES_SOCIALES, default='facebook')
-    nombre = models.CharField(max_length=250)
-    status = models.CharField(max_length=100, blank=True)
-    texto = models.TextField(blank=True, null=True)  # Texto del anuncio
-    #Adicionales (no están en el formulario)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ads')
-    ad_id= models.CharField(blank=True, max_length=100)
-    estado = models.CharField(max_length=20, choices=ESTADOS, default='PENDIENTE', help_text="Estado del anuncio")
-    comentario_admin = models.TextField(blank=True, null=True, help_text="Comentario del administrador al aprobar o rechazar")
-    created_at = models.DateField(default=date.today)
-
-    def __str__(self):
-        return self.nombre
-
-
 
 class Creative(models.Model):
+    # Keys
+    creative_id = models.CharField(max_length=100, blank=True) 
+
     nombre = models.CharField(max_length=255) # Nombre interno para identificación en la API
     name = models.CharField(max_length=255) # Título visible en el anuncio
     message = models.TextField(blank=True, null=True)  # Capta la atención inicial, PRINCIPAL
@@ -114,22 +114,65 @@ class Creative(models.Model):
     ])
 
     #Adicionales (no están en el formulario)
-    creative_id = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateField(default=date.today)
 
     def __str__(self):
         return self.nombre
+    
+
+class Ad(models.Model):
+    #Keys
+    ad_id= models.CharField(blank=True, max_length=100) 
+    adset_id = models.ForeignKey(AdSet, on_delete=models.CASCADE) # FK
+    creative_id = models.ForeignKey(Creative, on_delete=models.CASCADE) # FK
+
+    ESTADOS = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+    ]
+    
+    nombre = models.CharField(max_length=250)
+    status = models.CharField(max_length=100, blank=True)
+
+    revision = models.OneToOneField(Revision, on_delete=models.CASCADE, null=True, blank=True) # Campo para aprovación
+    created_at = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.nombre
+    
 
 # ---------------------- VACANTES ----------------------#
 class Vacante(models.Model):
+    INDUSTRIAS = [
+        ('TECNOLOGIA', 'Tecnología e Informática'),
+        ('SALUD', 'Salud y Medicina'),
+        ('EDUCACION', 'Educación'),
+        ('INGENIERIA', 'Ingeniería y Manufactura'),
+        ('VENTAS', 'Ventas y Marketing'),
+        ('ADMINISTRACION', 'Administración y Negocios'),
+        ('LEGAL', 'Legal'),
+        ('LOGISTICA', 'Logística y Transporte'),
+        ('SERVICIOS', 'Servicios Generales'),
+        ('TURISMO', 'Turismo y Hospitalidad'),
+        ('ENTRETENIMIENTO', 'Artes, Medios y Entretenimiento'),
+        ('INVESTIGACION', 'Ciencia e Investigación'),
+        ('AGROINDUSTRIA', 'Agroindustria y Medio Ambiente'),
+    ]
+
     vacante = models.CharField(max_length=255)
     empresa = models.TextField(max_length=100)
     ubicacion = models.CharField(max_length=255)
     contrato = models.CharField(max_length=100)
     salario = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
+    industria = models.CharField(max_length=100, choices=INDUSTRIAS, null=True)
+    modalidad = models.CharField(max_length=50, choices=[('Remoto', 'Remoto'), ('Presencial', 'Presencial'), ('Híbrido', 'Híbrido')], null=True)
+    experiencia = models.CharField(max_length=100, null=True)
+    #grupo = models.IntegerField(null=True, blank=True) # Para clustering
+    #modelo_clustering = models.ForeignKey(ModeloEntrenado, null=True, blank=True, on_delete=models.SET_NULL)
 
-    def __str__(self):
+    def __str__(self):  
         return self.vacante
     
 # ----------------------------------------------------#

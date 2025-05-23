@@ -78,7 +78,7 @@ def revisar_contenido_pendiente(request, tipo):
         messages.error(request, "Tipo de contenido inválido.")
         return redirect("home")  # o donde corresponda
 
-    contenido_pendiente = Modelo.objects.filter(revision__estado="PENDIENTE")
+    contenido_pendiente = Modelo.objects.filter(revision__estado="Pendiente")
 
     return render(request, "contenido_pendiente.html", {
         "contenidoo": contenido_pendiente,
@@ -211,6 +211,8 @@ def crear_campaña(request):
         form = CampaignForm(request.POST)
         if form.is_valid():
             # Guarda en la base de datos sin el ID de meta
+            campaña = form.save(commit=False)  
+            campaña.plataforma = form.cleaned_data['plataforma']
             form.save()  
             messages.success(request, "¡Los datos de campaña se ingresaron exitosamente!")
 
@@ -230,7 +232,7 @@ def crear_campaña(request):
                 "special_ad_categories": [],  
                 "access_token": ACCESS_TOKEN
             }
-            #'''
+            '''
             try:
                 # Hacer la solicitud POST a la API
                 response = requests.post(url, json=payload)
@@ -264,9 +266,17 @@ def crear_campaña(request):
 
 
 def mis_campañas(request):
-    campañas = Campaign.objects.all()
+    plataforma = request.session.get('plataforma', )
+    campañas = Campaign.objects.filter(plataforma=plataforma)
     return render(request, 'mis_campañas.html', {'campañas':campañas})
 
+
+def set_plataforma(request):
+    plataforma = request.GET.get('plataforma')
+    if plataforma in ['facebook', 'instagram']:
+        request.session['plataforma'] = plataforma
+        return JsonResponse({'ok': True})
+    return JsonResponse({'error': 'Plataforma inválida'}, status=400)
 
 # ---------------------- CREAR ADSET META ----------------------#
 
@@ -302,14 +312,14 @@ def crear_adset(request):
             url = f"{BASE_URL}/{AD_ACCOUNT_ID}/adsets"
             payload = {
                 "name": adset.nombre,
-                "campaign_id": adset.campaign_id,
-                "daily_budget": adset.daily_budget,
+                "campaign_id": adset.campaign_id.campaign_id,
+                "daily_budget": int(adset.daily_budget),
                 "billing_event": adset.billing_event,  # Se puede hacer dinámico según la necesidad
                 "optimization_goal": adset.optimization_goal,
                 "status": "PAUSED",
                 "access_token": ACCESS_TOKEN
             }
-            #'''
+            '''
             try:
                 response = requests.post(url, json=payload)
                 respuesta_json = response.json()
@@ -338,7 +348,8 @@ def crear_adset(request):
     return render(request, 'ad_set.html', {'form': form})
 
 def mis_adsets(request):
-    adsets = AdSet.objects.all()
+    plataforma = request.session.get('plataforma')
+    adsets = AdSet.objects.filter(plataforma=plataforma)
     return render(request, 'mis_adsets.html', {'adsets': adsets})
 
 
@@ -434,7 +445,8 @@ def crear_ad_meta(request, ad):
             
 
 def mis_ads(request):
-    ads = Ad.objects.all()
+    plataforma = request.session.get('plataforma')
+    ads = Ad.objects.filter(plataforma=plataforma)
     return render(request, 'mis_ads.html', {'ads': ads})
 
 # ---------------------- GENERAR TEXTO CON IA PARA CREATIVES----------------------#
@@ -565,7 +577,8 @@ def crear_creative(request):
     return render(request, "creative.html", {"form": form})
 
 def mis_creatives(request):
-    creatives = Creative.objects.all()
+    plataforma = request.session.get('plataforma')
+    creatives = Creative.objects.filter(plataforma = plataforma)
     return render(request, 'mis_creatives.html', {'creatives':creatives})
 
 # ---------------------- VER MIS VACANTES ----------------------#

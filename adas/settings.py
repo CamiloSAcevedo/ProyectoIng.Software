@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'administrador.middleware.PlataformaMiddleware', # Middleware para la plataforma
 ]
 
 ROOT_URLCONF = 'adas.urls'

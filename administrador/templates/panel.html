@@ -106,6 +106,19 @@
         margin-right: 8px; /* Espacio entre icono y texto */
         vertical-align: middle; /* Alineación vertical */
     }
+    .btn-pill {
+        background-color: #3dc971;
+        border: none;
+        color: white;
+        border-radius: 25px;
+        padding: 8px 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-pill:hover {
+        background-color: #9ee4b8;
+    }
 
     </style>
 </head>
@@ -156,6 +169,17 @@
                 </ul>
             </li>
         
+            <!-- Clustering Submenú desplegable -->
+            <li class="nav-item social-facebook">
+
+                <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/clustering_icono.png' %}" class="icono">Clustering</a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'entrenar_modelo' %}">Entrenar modelo</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_modelos' %}">Mis modelos</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_clusters' %}">Ver clusters</a></li>
+                </ul>
+            </li>
 
             <!-- Campañas - Submenú desplegable -->
             <li class="nav-item social-facebook">
@@ -207,14 +231,12 @@
         </ul>
         
       
-        <!-- Enlace a "Estadísticas" -->
-        <a href="#" class="btn btn-light">
-            <img src="{% static 'images/estadisticas_icono.png' %}" class="icono"> Estadisticas
-        </a>
-        <!-- Enlace a "Perfil" -->
-        <a href="#" class="btn btn-light">
-            <img src="{% static 'images/user_icono.png' %}" class="icono"> Perfil
-        </a>
+        <li class="nav-item social-x">
+             <!-- Enlace a "Estadísticas" -->
+            <a href="#" class="btn btn-light">
+                <img src="{% static 'images/estadisticas_icono.png' %}" class="icono"> Estadisticas
+            </a>
+        </li>
        
 
         <!-- Botón de cerrar sesión -->

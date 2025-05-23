@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from clustering import views as clusteringViews
 
 urlpatterns = [
     path('panel/', views.panel, name='panel'),  
@@ -35,6 +36,14 @@ urlpatterns = [
     path('vacantes/', views.mis_vacantes, name='mis_vacantes'),
     path('cargar_excel/', views.cargar_excel, name='cargar_excel'),
     # -------------------------------------------------#
+
+    #Clustering
+    path('mis_modelos/', clusteringViews.ver_modelos_entrenados, name='mis_modelos'),
+    path('entrenar_modelo/', clusteringViews.entrenar_modelo, name='entrenar_modelo'),
+    path('mis_clusters/', clusteringViews.ver_clusters, name='mis_clusters'),
+    path('clusters/<int:modelo_id>/<int:cluster>/targeting/', clusteringViews.definir_targeting, name='definir_targeting'),
+    path('clusters/<int:modelo_id>/<int:cluster>/targeting/generar_ia/', clusteringViews.generar_targeting_ia, name='generar_targeting_ia'),
+
 
 ]
 

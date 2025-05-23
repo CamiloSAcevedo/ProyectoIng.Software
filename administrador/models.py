@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
+from clustering.models import ModeloEntrenado, ClusterTargeting
 
 # ---------------------- TABLA PARA REVISIÓN DE ADMINISTRADOR----------------------#
 class Revision(models.Model):
@@ -20,17 +21,12 @@ class Revision(models.Model):
     
 # ---------------------- MODELOS X ----------------------#
 class Post(models.Model):
-    ESTADOS = [
-        ('PENDIENTE', 'Pendiente'),
-        ('APROBADO', 'Aprobado'),
-        ('RECHAZADO', 'Rechazado'),
-    ]
     
     nombre = models.CharField(max_length=250)
-    status = models.CharField(max_length=100, blank=True)
     texto = models.TextField(blank=True, null=True)  # Texto del anuncio
     revision = models.OneToOneField(Revision, on_delete=models.CASCADE, null=True, blank=True) # Campo para aprovación
     created_at = models.DateField(default=date.today)
+    #post_id = models.CharField(max_length=250)
 
     def __str__(self):
         return self.texto
@@ -61,6 +57,7 @@ class AdSet(models.Model):
     # Keys 
     adset_id= models.CharField(blank=True, max_length=100) 
     campaign_id = models.ForeignKey(Campaign, on_delete=models.CASCADE) # FK
+    targeting = models.ForeignKey(ClusterTargeting, null=True, blank=True, on_delete=models.SET_NULL)
 
     #añadir campo targeting
     BILLING_EVENTS = [
@@ -125,37 +122,44 @@ class Ad(models.Model):
     ad_id= models.CharField(blank=True, max_length=100) 
     adset_id = models.ForeignKey(AdSet, on_delete=models.CASCADE) # FK
     creative_id = models.ForeignKey(Creative, on_delete=models.CASCADE) # FK
-
-    ESTADOS = [
-        ('PENDIENTE', 'Pendiente'),
-        ('APROBADO', 'Aprobado'),
-        ('RECHAZADO', 'Rechazado'),
-    ]
-    
     nombre = models.CharField(max_length=250)
-    status = models.CharField(max_length=100, blank=True)
-
     revision = models.OneToOneField(Revision, on_delete=models.CASCADE, null=True, blank=True) # Campo para aprovación
     created_at = models.DateField(default=date.today)
 
     def __str__(self):
         return self.nombre
     
-
 # ---------------------- VACANTES ----------------------#
 class Vacante(models.Model):
+    INDUSTRIAS = [
+        ('TECNOLOGIA', 'Tecnología e Informática'),
+        ('SALUD', 'Salud y Medicina'),
+        ('EDUCACION', 'Educación'),
+        ('INGENIERIA', 'Ingeniería y Manufactura'),
+        ('VENTAS', 'Ventas y Marketing'),
+        ('ADMINISTRACION', 'Administración y Negocios'),
+        ('LEGAL', 'Legal'),
+        ('LOGISTICA', 'Logística y Transporte'),
+        ('SERVICIOS', 'Servicios Generales'),
+        ('TURISMO', 'Turismo y Hospitalidad'),
+        ('ENTRETENIMIENTO', 'Artes, Medios y Entretenimiento'),
+        ('INVESTIGACION', 'Ciencia e Investigación'),
+        ('AGROINDUSTRIA', 'Agroindustria y Medio Ambiente'),
+    ]
+
     vacante = models.CharField(max_length=255)
     empresa = models.TextField(max_length=100)
     ubicacion = models.CharField(max_length=255)
     contrato = models.CharField(max_length=100)
     salario = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
-    industria = models.CharField(max_length=100, null=True)
+    industria = models.CharField(max_length=100, choices=INDUSTRIAS, null=True)
     modalidad = models.CharField(max_length=50, choices=[('Remoto', 'Remoto'), ('Presencial', 'Presencial'), ('Híbrido', 'Híbrido')], null=True)
     experiencia = models.CharField(max_length=100, null=True)
     grupo = models.IntegerField(null=True, blank=True) # Para clustering
+    modelo_clustering = models.ForeignKey(ModeloEntrenado, null=True, blank=True, on_delete=models.SET_NULL)
 
-    def __str__(self):
+    def __str__(self):  
         return self.vacante
     
 # ----------------------------------------------------#

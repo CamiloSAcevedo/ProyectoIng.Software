@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'adas', # Configuración de la aplicación y vista principal
     'administrador', # Toda la logica de la aplicacion
     'autenticacion', # Autenticación de usuarios
+    'clustering', # Entrenamiento y uso de modelos para clustering
 ]
 
 MIDDLEWARE = [

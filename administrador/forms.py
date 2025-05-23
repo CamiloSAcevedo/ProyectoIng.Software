@@ -12,7 +12,7 @@ class CampaignForm(forms.ModelForm):
 class AdSetForm(forms.ModelForm):
     class Meta:
         model = AdSet
-        fields = ['nombre', 'campaign_id', 'daily_budget', 'billing_event', 'optimization_goal', 'status']
+        fields = ['nombre', 'campaign_id', 'targeting', 'daily_budget', 'billing_event', 'optimization_goal', 'status']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,7 +21,7 @@ class AdSetForm(forms.ModelForm):
 class AdForm(forms.ModelForm):
     class Meta:
         model = Ad
-        fields = ['nombre', 'adset_id', 'status', 'creative_id']
+        fields = ['nombre', 'adset_id', 'creative_id']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -39,7 +39,7 @@ class CreativeForm(forms.ModelForm):
 class VacanteForm(forms.ModelForm):
     class Meta:
         model = Vacante
-        fields = ['vacante', 'empresa', 'ubicacion', 'contrato', 'salario', 'descripcion']
+        fields = ['vacante', 'empresa', 'ubicacion', 'contrato', 'salario', 'descripcion', 'industria', 'modalidad', 'experiencia']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -48,4 +48,4 @@ class VacanteForm(forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     archivo = forms.FileField(label='Seleccionar archivo Excel')
-# ---------------------- MIS VACANTES ----------------------#
+

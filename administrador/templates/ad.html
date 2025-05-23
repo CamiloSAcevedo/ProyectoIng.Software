@@ -93,13 +93,19 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="id_adset_id">Adset ID</label>
+                    {{ form.adset_id }}
+                    <span class="form-help">Ingresa el ID del ad set al que pertenece este anuncio.</span>
+                </div>
+
+                <div class="form-group">
                     <label for="id_creative_id">Creative ID</label>
                     {{ form.creative_id }}
-                    <span class="form-help">Selecciona el nombre del contenido creativo que se usará.</span>
+                    <span class="form-help">Ingresa el ID del contenido creativo que se usará.</span>
                 </div>
 
 
-                <button type="submit" class="btn btn-primary">Crear ad</button> 
+                <button type="submit" class="btn btn-primary">Actualizar</button> 
             </form>
 
     

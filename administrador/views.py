@@ -215,11 +215,11 @@ def crear_campaña(request):
         form = CampaignForm(request.POST)
         if form.is_valid():
             # Guarda en la base de datos sin el ID de meta
-            form.save()  
+            #form.save()  
             messages.success(request, "¡Los datos de campaña se ingresaron exitosamente!")
 
             # Evita guardarlo aún en la BD para guardar después con ID de meta
-            #campaña = form.save(commit=False)  
+            campaña = form.save(commit=False)  
 
             # Obtener los datos ingresados por el usuario
             nombre = form.cleaned_data['nombre']

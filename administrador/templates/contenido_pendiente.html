@@ -1,6 +1,23 @@
 {% extends 'panel.html' %}
 
 {% block content %}
+
+<style>
+    .btn-primary {
+        background-color: #3dc971; /* Color de fondo */
+        border: none; /* Sin borde */
+        color: white; /* Color del texto */
+        
+        cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+        font-weight: bold; /* Texto en negrita */
+        transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-primary:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+    }
+
+</style>
 <div class="container mt-4">
     <h2 class="mb-4">{{ tipo|title }} pendientes</h2>
 
@@ -21,7 +38,7 @@
                     <p class="card-text"><strong>Autor:</strong> {{ contenido.usuario.username }}</p>
                     <p class="card-text"><strong>Estado:</strong> {{ contenido.revision.estado }}</p>
                     {% if contenido.pk %}
-                    <a href="{% url 'actualizar_estado_contenido' tipo contenido.pk %}" class="btn btn-primary">Revisar</a>
+                    <a href="{% url 'actualizar_estado_contenido' tipo contenido.pk %}" class="btn btn-primary w-100">Revisar</a>
                     {% else %}
                     <span class="text-danger">Sin ID</span>
                     {% endif %}

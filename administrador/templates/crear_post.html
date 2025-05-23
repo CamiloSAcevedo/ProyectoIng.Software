@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 {% extends 'panel.html' %}
-
 {% block content %}
 
 <h2 class="mb-4">Crear Anuncio en X</h2>
+
 
 <style>
     /* Esto es animación para desvanecer las alertas */
@@ -16,15 +17,15 @@
 /* Estilo para el botón de publicar */
 
 .btn-publicar {
-    background-color: #4e4e4e;
-    border-color: #000000;
+    background-color: #3dc971;
+    border-color: none;
     color: white;
     font-weight: bold;
 }
 .btn-publicar:hover {
-    background-color: #545454;
-    border-color: #000000;
-    color: black;
+    background-color: #9ee4b8;
+    border-color: none;
+    color: white;
 }
 </style>
 
@@ -40,6 +41,15 @@
 <!-- Formulario para crear anuncios -->
 <form method="POST">
     {% csrf_token %} <!-- Token de seguridad para CSRF -->
+
+    <div class="mb-3">
+    <select id="vacanteSeleccionar" class="form-select">
+        <option value="">-- Selecciona una vacante --</option>
+        {% for vacante in vacantes %}
+            <option value="{{ vacante.id }}">{{ vacante.vacante }}</option>
+        {% endfor %}
+    </select>
+    </div>
 
     <!-- Toggle para cambiar entre formulario estructurado y entrada libre -->
     <div class="form-check form-switch mb-3">
@@ -249,8 +259,63 @@ document.querySelectorAll(".hashtag-check").forEach(elem => {
     elem.addEventListener("change", updatePreview);
 });
 
+
+document.getElementById("vacanteSeleccionar").addEventListener("change", function() {
+    const vacanteId = this.value;
+    
+    if (!vacanteId) return;
+    
+    // Usa el template tag para generar la URL correctamente
+    fetch(`/administrador/obtener-vacante/${vacanteId}/`)
+        .then(response => {
+            if (!response.ok) throw new Error("Error en la respuesta");
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+            
+            // Rellena los campos en formulario estructurado.
+            const fields = {
+                'vacante': data.vacante,
+                'empresa': data.empresa,
+                'ubicacion': data.ubicacion,
+                'contrato': data.contrato,
+                'salario': data.salario,
+                'descripcion': data.descripcion
+            };
+            
+            Object.entries(fields).forEach(([id, value]) => {
+                const field = document.getElementById(id);
+                if (field) field.value = value || '';
+            });
+            // Rellena tambien en forma libre.
+            const tweetLibre = 
+                `💼Vacante: ${data.vacante}\n` +
+                `🏢Empresa: ${data.empresa}\n` +
+                `📍Ubicación: ${data.ubicacion}\n` +
+                `📝Contrato: ${data.contrato}\n` +
+                `💰Salario: $ ${data.salario}\n` +
+                `🧾Descripción: ${data.descripcion}\n\n` +
+                `👉 Interesad@s, enviar HV en la web de Magneto.\n\n` +
+                `#Empleo #Vacantes`;
+
+            const tweetManual = document.getElementById("tweetManual");
+            if (tweetManual) tweetManual.value = tweetLibre;
+            
+            updatePreview();
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Error al cargar la vacante: " + error.message);
+        });
+});
+
+
 // Actualizar la vista previa al cargar la página
 window.onload = updatePreview;
+
+
 </script>
+
 
 {% endblock %}

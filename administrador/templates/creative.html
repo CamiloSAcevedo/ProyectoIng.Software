@@ -63,15 +63,29 @@
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="{{ form.nombre.id_for_label }}">Ingresa un nombre para el creative:</label>
+                    <label for="{{ form.nombre.id_for_label  }}">Ingresa un nombre para el creative:</label>
                     {{ form.nombre }}
                     <small class="form-text">Este será el título interno que identificarás en el sistema.</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.name.id_for_label }}">Ingresa name (títlulo):</label>
+                    <label for="{{ form.name.id_for_label }}" class ="form-label">Ingresa name (títlulo):</label>
                     {{ form.name }}
                     <small class="form-text">Este será el título visible en el anuncio.</small>
+                </div>
+
+                <div class="form-group">
+                <div class="mb-3 position-relative">
+                    <label for="vacante-input" class="form-label">Buscar vacante (Para generación con IA):</label>
+                    <input type="text" class="form-control" id="vacante-input" placeholder="Escribe el nombre de la vacante...">
+                    <ul id="sugerencias" class="list-group position-absolute w-100" style="z-index: 1000; display: none;"></ul>
+                    <input type="hidden" name="vacante_id" id="vacante_id">
+                </div>
+
+                <div id="vacanteSeleccionada" class="mt-2 text-success" style="display: none;">
+                    Vacante seleccionada: <span id="vacanteNombre"></span>
+                </div>  
+
                 </div>
 
                 <div class="form-group">
@@ -79,11 +93,28 @@
                     {{ form.message }}
                     <small class="form-text">Texto principal que aparece en la parte superior del anuncio.</small>
                 </div>
+                
+                <!-- Para generar el mensaje con IA -->
+                <div class="form-group">
+                    <label for="prompt-message">Generar mensaje con IA:</label>
+                    <textarea id="prompt-message" class="form-control" placeholder="Describe qué debe decir el mensaje..."></textarea>
+
+                    <button type="button" class="btn btn-outline-primary mt-2" onclick="generarMessage()">Generar mensaje</button>
+                </div>
+               
+
 
                 <div class="form-group">
                     <label for="{{ form.body.id_for_label }}">Ingresa el cuerpo:</label>
                     {{ form.body }}
                     <small class="form-text">Texto secundario debajo de la imagen, que da más contexto o detalles.</small>
+                </div>
+
+                <!-- Para generar el cuerpo con IA -->
+                <div class="form-group">
+                    <label for="prompt-body">Generar cuerpo con IA:</label>
+                    <textarea id="prompt-body" class="form-control" placeholder="Describe el contenido del cuerpo del anuncio..."></textarea>
+                    <button type="button" class="btn btn-outline-primary mt-2" onclick="generarBody()">Generar cuerpo</button>
                 </div>
 
                 <div class="form-group">
@@ -105,9 +136,108 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Crear Creative</button>
+                {{ form.plataforma }}
+                
             </form>
             
         </div>
     </div>
 </div>
+
+
+<!-- Script para la generación de texto con IA -->
+<script>
+function generarMessage() {
+    const prompt = document.getElementById("prompt-message").value;
+    const vacanteId = document.getElementById("vacante_id").value;
+
+    fetch("{% url 'generar_message_ia' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({ prompt: prompt, vacante_id: vacanteId })        
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("id_message").value = data.texto;
+    });
+}
+
+function generarBody() {
+    const prompt = document.getElementById("prompt-body").value;
+    const vacanteId = document.getElementById("vacante_id").value;
+    fetch("{% url 'generar_body_ia' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: new URLSearchParams({ prompt: prompt, vacante_id: vacanteId })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("id_body").value = data.texto;
+    });
+}
+// Script para la búsqueda de vacantes
+document.addEventListener("DOMContentLoaded", function() {
+    const input = document.getElementById("vacante-input");
+    const sugerencias = document.getElementById("sugerencias");
+    const vacanteIdInput = document.getElementById("vacante_id");
+
+    input.addEventListener("input", function() {
+        const query = input.value.trim();
+
+        if (query.length < 2) {
+            sugerencias.innerHTML = "";
+            sugerencias.style.display = "none";
+            return;
+        }
+
+        fetch(`{% url 'buscar_vacante' %}?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                sugerencias.innerHTML = "";
+
+                if (!data.length) {
+                    sugerencias.style.display = "none";
+                    return;
+                }
+
+                data.forEach(vacante => {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item list-group-item-action";
+                    li.textContent = vacante.vacante;
+                    li.addEventListener("click", () => {
+                        input.value = vacante.vacante;
+                        vacanteIdInput.value = vacante.id;
+                        sugerencias.innerHTML = "";
+                        sugerencias.style.display = "none";
+                    });
+                    sugerencias.appendChild(li);
+                });
+
+                sugerencias.style.display = "block";
+            });
+    });
+
+    // Cierra el menú si haces clic fuera
+    document.addEventListener("click", function(e) {
+        if (!sugerencias.contains(e.target) && e.target !== input) {
+            sugerencias.style.display = "none";
+        }
+    });
+});
+    //Script para guardar la plataforma seleccionada en localStorage
+    document.addEventListener('DOMContentLoaded', function () {
+        const plataforma = localStorage.getItem('selectedSocial') || 'facebook';
+        const input = document.getElementById('plataforma-input');
+        if (input) {
+            input.value = plataforma;
+        }
+    });
+</script>
+
 {% endblock content %}

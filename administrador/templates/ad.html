@@ -105,12 +105,22 @@
                 </div>
 
 
-                <button type="submit" class="btn btn-primary">Actualizar</button> 
+                <button type="submit" class="btn btn-primary">Crear ad</button> 
+               {{ form.plataforma }}
             </form>
 
     
         </div>
     </div>
 </div>
-
+<script>
+    //Script para guardar la plataforma seleccionada en localStorage
+    document.addEventListener('DOMContentLoaded', function () {
+        const plataforma = localStorage.getItem('selectedSocial') || 'facebook';
+        const input = document.getElementById('plataforma-input');
+        if (input) {
+            input.value = plataforma;
+        }
+    });
+</script>
 {% endblock content %}

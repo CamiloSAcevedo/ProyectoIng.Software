@@ -1,0 +1,30 @@
+{% extends 'panel.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow" style="width: 35rem;">
+        <div class="card-body">
+            <h2 class="card-title mb-4 text-center">Revisión de Ad TikTok</h2>
+            <p><b>Nombre:</b> {{ ad.nombre }}</p>
+            <p><b>Contenido:</b> {{ ad.contenido }}</p>
+            {% if ad.imagen %}
+                <img src="{{ ad.imagen.url }}" class="img-fluid mb-3" style="max-height: 180px;">
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="estado" class="form-label"><b>Cambiar estado</b></label>
+                    <select name="estado" id="estado" class="form-control">
+                        <option value="APROBADO" {% if ad.estado == "APROBADO" %}selected{% endif %}>Aprobar</option>
+                        <option value="RECHAZADO" {% if ad.estado == "RECHAZADO" %}selected{% endif %}>Rechazar</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="comentario" class="form-label"><b>Comentario</b></label>
+                    <textarea name="comentario" id="comentario" class="form-control">{{ ad.comentario_admin }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

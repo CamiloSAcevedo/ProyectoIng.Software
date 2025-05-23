@@ -1,0 +1,28 @@
+{% extends 'panel.html' %}
+{% block content %}
+<div class="container d-flex flex-column align-items-center" style="min-height: 80vh;">
+    <h2 class="mb-4 text-center">Ads TikTok</h2>
+    {% if not adgroup_id %}
+        <a class="btn btn-success mb-3" href="{% url 'ad_tiktok_create_select_adgroup' %}">Nuevo Ad</a>
+    {% endif %}
+    <div class="w-100 d-flex flex-wrap justify-content-center">
+        {% for ad in ads %}
+            <div class="card m-2" style="width: 22rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ad.nombre }}</h5>
+                    <p class="card-text">{{ ad.contenido }}</p>
+                    {% if ad.url %}
+                        <a href="{{ ad.url }}" target="_blank" class="btn btn-link p-0">Ver URL</a><br>
+                    {% endif %}
+                    {% if ad.imagen %}
+                        <img src="{{ ad.imagen.url }}" class="img-fluid mt-2" style="max-height: 180px;">
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info mt-3">No hay Ads.</div>
+        {% endfor %}
+    </div>
+    <a href="{% url 'adgroup_tiktok_all' %}" class="btn btn-link mt-3">Volver a Ad Groups</a>
+</div>
+{% endblock %}

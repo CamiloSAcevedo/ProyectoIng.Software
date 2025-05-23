@@ -1,0 +1,13 @@
+{% extends 'panel.html' %}
+{% block content %}
+<h2>Selecciona el Ad Group para crear un Ad</h2>
+<form method="post">{% csrf_token %}
+    <select name="adgroup_id" class="form-select mb-3" required>
+        <option value="">Selecciona un Ad Group</option>
+        {% for adg in adgroups %}
+            <option value="{{ adg.id }}">{{ adg.nombre }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-success">Continuar</button>
+</form>
+{% endblock %}

@@ -19,6 +19,10 @@ from django.urls import reverse
 
 import pandas as pd
 from django.db import IntegrityError
+from .models import AdvertiserTikTok, CampaignTikTok, AdGroupTikTok, AdTikTok
+from .forms import AdvertiserTikTokForm, CampaignTikTokForm, AdGroupTikTokForm, AdTikTokForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 # Cargar variables desde el .env
@@ -48,6 +52,25 @@ def panel(request):
 @login_required
 def estadisticas(request):
     return render(request, 'estadisticas.html')
+
+
+@login_required
+def crear_post_tiktok(request):
+    
+    return render(request, 'crear_post_tiktok.html')
+
+@login_required
+def mis_solicitudes_post_tiktok(request):
+    
+    return render(request, 'mis_solicitudes_post_tiktok.html')
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+def revisar_contenido_pendiente_post_tiktok(request):
+    
+    return render(request, 'revisar_contenido_pendiente_post_tiktok.html')
+
+
 
 #@login_required
 def crear_ads(request):
@@ -422,6 +445,8 @@ def crear_ad(request):
         form = AdForm(request.POST)  
         if form.is_valid():
             ad = form.save(commit=False)
+            ad.estado = 'PENDIENTE'
+            ad.save()
 
             # Crear la revisión asociada al usuario autenticado
             revision = Revision.objects.create(
@@ -702,3 +727,143 @@ def obtener_vacante(request, vacante_id):
         })
     except Vacante.DoesNotExist:
         return JsonResponse({'error': 'Vacante no encontrada'}, status=404)
+
+# ---------------------- TIKTOK ----------------------#
+# ----------- Advertiser TikTok -----------
+@login_required
+def advertiser_tiktok_list(request):
+    advertisers = AdvertiserTikTok.objects.filter(usuario=request.user)
+    return render(request, 'tiktoktemplates/advertiser_list.html', {'advertisers': advertisers})
+
+@login_required
+def advertiser_tiktok_create(request):
+    if request.method == 'POST':
+        form = AdvertiserTikTokForm(request.POST)
+        if form.is_valid():
+            advertiser = form.save(commit=False)
+            advertiser.usuario = request.user
+            advertiser.save()
+            return redirect('advertiser_tiktok_list')
+    else:
+        form = AdvertiserTikTokForm()
+    return render(request, 'tiktoktemplates/advertiser_form.html', {'form': form})
+
+# ----------- Campaign TikTok -----------
+@login_required
+def campaign_tiktok_list(request, advertiser_id):
+    campaigns = CampaignTikTok.objects.filter(advertiser_id=advertiser_id)
+    return render(request, 'tiktoktemplates/campaign_list.html', {'campaigns': campaigns, 'advertiser_id': advertiser_id})
+
+@login_required
+def campaign_tiktok_create(request, advertiser_id):
+    if request.method == 'POST':
+        form = CampaignTikTokForm(request.POST)
+        if form.is_valid():
+            campaign = form.save(commit=False)
+            campaign.advertiser_id = advertiser_id
+            campaign.save()
+            return redirect('campaign_tiktok_list', advertiser_id=advertiser_id)
+    else:
+        form = CampaignTikTokForm(initial={'advertiser': advertiser_id})
+    return render(request, 'tiktoktemplates/campaign_form.html', {'form': form, 'advertiser_id': advertiser_id})
+
+# ----------- Ad Group TikTok -----------
+@login_required
+def adgroup_tiktok_list(request, campaign_id):
+    adgroups = AdGroupTikTok.objects.filter(campaign_id=campaign_id)
+    return render(request, 'tiktoktemplates/adgroup_list.html', {'adgroups': adgroups, 'campaign_id': campaign_id})
+
+@login_required
+def adgroup_tiktok_create(request, campaign_id):
+    if request.method == 'POST':
+        form = AdGroupTikTokForm(request.POST)
+        if form.is_valid():
+            adgroup = form.save(commit=False)
+            adgroup.campaign_id = campaign_id
+            adgroup.save()
+            return redirect('adgroup_tiktok_list', campaign_id=campaign_id)
+    else:
+        form = AdGroupTikTokForm(initial={'campaign': campaign_id})
+    return render(request, 'tiktoktemplates/adgroup_form.html', {'form': form, 'campaign_id': campaign_id})
+
+# ----------- Ad TikTok -----------
+@login_required
+def ad_tiktok_list(request, adgroup_id):
+    ads = AdTikTok.objects.filter(adgroup_id=adgroup_id)
+    return render(request, 'tiktoktemplates/ad_list.html', {'ads': ads, 'adgroup_id': adgroup_id})
+
+@login_required
+def ad_tiktok_create(request, adgroup_id):
+    if request.method == 'POST':
+        form = AdTikTokForm(request.POST, request.FILES)
+        if form.is_valid():
+            ad = form.save(commit=False)
+            ad.adgroup_id = adgroup_id
+            ad.save()
+            return redirect('ad_tiktok_list', adgroup_id=adgroup_id)
+    else:
+        form = AdTikTokForm(initial={'adgroup': adgroup_id})
+    return render(request, 'tiktoktemplates/ad_form.html', {'form': form, 'adgroup_id': adgroup_id})
+
+@login_required
+def adgroup_tiktok_all(request):
+    adgroups = AdGroupTikTok.objects.all()
+    return render(request, 'tiktoktemplates/adgroup_list.html', {'adgroups': adgroups, 'campaign_id': None})
+
+@login_required
+def ad_tiktok_all(request):
+    ads = AdTikTok.objects.all()
+    return render(request, 'tiktoktemplates/ad_list.html', {'ads': ads, 'adgroup_id': None})
+
+@login_required
+def adgroup_tiktok_create_select_campaign(request):
+    from .models import CampaignTikTok
+    campaigns = CampaignTikTok.objects.all()
+    if request.method == "POST":
+        campaign_id = request.POST.get("campaign_id")
+        if campaign_id:
+            return redirect('adgroup_tiktok_create', campaign_id=campaign_id)
+    return render(request, 'tiktoktemplates/adgroup_select_campaign.html', {'campaigns': campaigns})
+
+@login_required
+def ad_tiktok_create_select_adgroup(request):
+    from .models import AdGroupTikTok
+    adgroups = AdGroupTikTok.objects.all()
+    if request.method == "POST":
+        adgroup_id = request.POST.get("adgroup_id")
+        if adgroup_id:
+            return redirect('ad_tiktok_create', adgroup_id=adgroup_id)
+    return render(request, 'tiktoktemplates/ad_select_adgroup.html', {'adgroups': adgroups})
+
+@staff_member_required
+def revisar_ads_tiktok(request):
+    ads_pendientes = AdTikTok.objects.filter(estado='PENDIENTE')
+    return render(request, 'tiktoktemplates/revisar_ads_pendientes.html', {'ads': ads_pendientes})
+
+@staff_member_required
+def aprobar_rechazar_ad_tiktok(request, ad_id):
+    ad = get_object_or_404(AdTikTok, id=ad_id)
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado')
+        comentario = request.POST.get('comentario')
+        ad.estado = nuevo_estado
+        ad.comentario_admin = comentario
+        ad.save()
+        # Si apruebas, puedes ponerlo como PUBLICADO si quieres
+        return redirect('revisar_ads_tiktok')
+    return render(request, 'tiktoktemplates/aprobar_ad.html', {'ad': ad})
+
+@login_required
+def mis_solicitudes_ads_tiktok(request):
+    estado = request.GET.get('estado')
+    ads = AdTikTok.objects.filter(adgroup__campaign__advertiser__usuario=request.user)
+    if estado:
+        ads = ads.filter(estado=estado)
+    return render(request, 'tiktoktemplates/mis_solicitudes_ads.html', {
+        'ads': ads,
+        'estado_seleccionado': estado
+    })
+
+def ads_tiktok_publicados(request):
+    ads = AdTikTok.objects.filter(estado='APROBADO')
+    return render(request, 'tiktoktemplates/ad_list.html', {'ads': ads, 'adgroup_id': None, 'solo_publicados': True})

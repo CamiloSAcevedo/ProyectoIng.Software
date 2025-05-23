@@ -95,28 +95,37 @@
 </style>
 
 <h2>Mis vacantes</h2>
-<p class="subtitulo-vacantes">Aquí podrás buscar, subir desde un Excel y ingresar manualmente tus vacantes.</p>
+<h5>Aquí podrás visualizar las vacantes actuales y cargar/ingresar nuevas seleccionando el modelo de clustering para su segmentación.</h5>
+<div style="height: 50px;"></div> 
 
+<!-- Contenedor general alineado con flexbox -->
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+    
+    <!-- Barra de búsqueda -->
+    <form method="get" class="search-form">
+        <input type="text" name="q" class="search-input" placeholder="Buscar vacantes..." value="{{ request.GET.q }}">
+        <button type="submit" class="btn-pill">Buscar</button>
+    </form>
 
-<div class="search-actions-container">
-    <div class="search-left">
-        <!-- Barra de búsqueda -->
-        <form method="get" class="search-form">
-            <input type="text" name="q" class="search-input" placeholder="Buscar vacantes..." value="{{ request.GET.q }}">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
-    </div>
-    <div class="search-right">
-        <!-- Botón Cargar (Excel) -->
-        <form method="post" action="{% url 'cargar_excel' %}" enctype="multipart/form-data" id="form-excel" style="display: flex; align-items: center; gap: 10px;">
-            {% csrf_token %}
-            <label for="excelInput" class="btn-primary">Cargar</label>
-            <input type="file" name="archivo_excel" id="excelInput" onchange="document.getElementById('form-excel').submit();">
-        </form>
-        <!-- Botón Ingresar manual -->
-        <button class="btn-escribir" onclick="mostrarFormulario()">Ingresar</button>
-    </div>
+    <!-- Botón Ingresar manual -->
+    <button class="btn-pill" onclick="mostrarFormulario()">Ingresar</button>
+
+    <!-- Selector de modelo -->
+    <form method="post" action="{% url 'cargar_excel' %}" enctype="multipart/form-data" id="form-excel" style="display: flex; align-items: center; gap: 10px;">
+        {% csrf_token %}
+        <select name="modelo_clustering_id" class="form-select" required style="height: 36px; border-radius: 10px; padding: 4px 35px;">
+            <option value="" disabled selected>Selecciona un modelo</option>
+            {% for modelo in modelos %}
+                <option value="{{ modelo.id }}">{{ modelo.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Botón Cargar -->
+        <label for="excelInput" class="btn-pill" style="cursor: pointer;">Cargar</label>
+        <input type="file" name="archivo_excel" id="excelInput" onchange="document.getElementById('form-excel').submit();" style="display: none;">
+    </form>
 </div>
+
 
 <!-- Formulario Manual -->
 <div id="formulario-vacante" style="display: none; margin-top: 1em;">
@@ -152,7 +161,32 @@
             <label class="form-label">Descripción:</label>
             <textarea class="form-control" name="descripcion" id="descripcion" rows="2"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <!-- Campo para la industria de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Industria:</label>
+            <input type="text" class="form-control" name="industria" id="industria">
+        </div>
+        <!-- Campo para la modalidad de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Modalidad:</label>
+            <input type="text" class="form-control" name="modalidad" id="modalidad">
+        </div>
+        <!-- Campo para la experiencia de la vacante -->
+        <div class="mb-2">
+            <label class="form-label">Experiencia:</label>
+            <input type="text" class="form-control" name="experiencia" id="experiencia">
+        </div>
+        <!-- Sección para seleccionar el modelo de clustering -->
+         <div class="mb-2">
+            <label class="form-label">Seleccione un modelo de clustering para agrupar la vacante:</label>
+            <select class="form-control" name="modelo_clustering" id="modelo_clustering">
+                {% for modelo in modelos %}
+                    <option value="{{ modelo.id }}">{{ modelo.nombre }} - {{ modelo.fecha }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
     </form>
 </div>
 

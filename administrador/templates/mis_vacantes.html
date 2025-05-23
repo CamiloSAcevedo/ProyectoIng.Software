@@ -103,24 +103,6 @@
         <label for="excelInput" class="btn-pill" style="cursor: pointer;">Cargar</label>
         <input type="file" name="archivo_excel" id="excelInput" onchange="document.getElementById('form-excel').submit();" style="display: none;">
     </form>
-<div class="search-actions-container">
-    <div class="search-left">
-        <!-- Barra de búsqueda -->
-        <form method="get" class="search-form">
-            <input type="text" name="q" class="search-input" placeholder="Buscar vacantes..." value="{{ request.GET.q }}">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-        </form>
-    </div>
-    <div class="search-right">
-        <!-- Botón Cargar (Excel) -->
-        <form method="post" action="{% url 'cargar_excel' %}" enctype="multipart/form-data" id="form-excel" style="display:inline;">
-            {% csrf_token %}
-            <label for="excelInput" class="btn-primary">Cargar</label>
-            <input type="file" name="archivo_excel" id="excelInput" onchange="document.getElementById('form-excel').submit();">
-        </form>
-        <!-- Botón Ingresar manual -->
-        <button class="btn-escribir" onclick="mostrarFormulario()">Ingresar</button>
-    </div>
 </div>
 
 

@@ -725,7 +725,7 @@ def cargar_excel(request):
 
         if not archivo or not modelo_id:
             messages.error(request, "Debes seleccionar un archivo y un modelo.")
-            return redirect("mis_vacantes")
+            return redirect("vacantes")
 
         modelo = ModeloEntrenado.objects.get(id=modelo_id)
 
@@ -766,7 +766,7 @@ def cargar_excel(request):
             )
 
         messages.success(request, "Vacantes cargadas exitosamente.")
-        return redirect("mis_vacantes")
+        return redirect("vacantes")
 
     
 # ---------------------------- AUTO RELLENO EN POST --------------------------------#

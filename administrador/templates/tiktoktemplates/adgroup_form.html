@@ -1,15 +1,77 @@
 {% extends 'panel.html' %}
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow" style="width: 35rem;">
+<style>
+    .boton-verde {
+        background-color: #45d482;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .boton-verde:hover {
+        background-color: #36c172;
+        color: white;
+    }
+
+    .boton-gris {
+        background-color: #cccccc;
+        color: #333;
+        font-weight: bold;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .boton-gris:hover {
+        background-color: #b3b3b3;
+    }
+
+    .card-custom {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+
+    form p {
+        margin-bottom: 1rem;
+    }
+
+    form p label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        color: #333;
+    }
+
+    form p input,
+    form p select,
+    form p textarea {
+        width: 100%;
+        padding: 0.5rem 0.8rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-start pt-5" style="min-height: 80vh;">
+    <div class="card card-custom p-4" style="width: 100%; max-width: 60rem;">
         <div class="card-body">
             <h2 class="card-title mb-4 text-center">Nuevo Ad Group TikTok</h2>
+
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+
                 <div class="d-flex justify-content-between mt-3">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{% url 'adgroup_tiktok_list' campaign_id %}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="boton-verde">Guardar</button>
+                    <a href="{% url 'adgroup_tiktok_list' campaign_id %}" class="boton-gris">Cancelar</a>
                 </div>
             </form>
         </div>

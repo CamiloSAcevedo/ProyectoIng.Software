@@ -217,16 +217,12 @@
             <!-- Eliminado: Anuncios TikTok -->
 
             <!-- Advertisers TikTok -->
-            <li class="nav-item social-tiktok">
-                <a class="nav-link" href="{% url 'advertiser_tiktok_list' %}">
-                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Advertisers
-                </a>
-            </li>
+
 
             <!-- Campañas TikTok -->
             <li class="nav-item social-tiktok">
                 <a class="nav-link dropdown-toggle" href="#">
-                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Campañas
+                    <img src="{% static 'images/campana_icono.png' %}" class="icono"> Campañas
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'advertiser_tiktok_list' %}">Ver Advertisers</a></li>
@@ -237,7 +233,7 @@
             <!-- Ad Groups TikTok - Submenú desplegable -->
             <li class="nav-item social-tiktok">
                 <a class="nav-link dropdown-toggle" href="#">
-                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Ad Groups
+                    <img src="{% static 'images/ads_group.png' %}" class="icono"> Ad Groups
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'adgroup_tiktok_all' %}">Ver todos</a></li>
@@ -247,7 +243,7 @@
             <!-- Ads TikTok - Submenú desplegable -->
             <li class="nav-item social-tiktok">
                 <a class="nav-link dropdown-toggle" href="#">
-                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Ads
+                    <img src="{% static 'images/ad_icono.png' %}" class="icono"> Ads
                 </a>
                 <ul class="dropdown-menu">
                     {% if request.user.is_staff %}

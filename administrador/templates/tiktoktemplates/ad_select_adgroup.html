@@ -1,13 +1,58 @@
 {% extends 'panel.html' %}
 {% block content %}
-<h2>Selecciona el Ad Group para crear un Ad</h2>
-<form method="post">{% csrf_token %}
-    <select name="adgroup_id" class="form-select mb-3" required>
-        <option value="">Selecciona un Ad Group</option>
-        {% for adg in adgroups %}
-            <option value="{{ adg.id }}">{{ adg.nombre }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-success">Continuar</button>
-</form>
+<style>
+    .boton-verde {
+        background-color: #45d482;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .boton-verde:hover {
+        background-color: #36c172;
+        color: white;
+    }
+
+    .card-custom {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        width: 35rem;  /* Más ancho */
+        margin-top: 2rem; /* Un poco más arriba */
+    }
+
+    .form-select {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 0.5rem 0.8rem;
+        font-size: 1rem;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-start" style="min-height: 80vh; padding-top: 3rem;">
+    <div class="card card-custom p-4">
+        <div class="card-body">
+            <h2 class="card-title mb-4 text-center">Selecciona el Ad Group para crear un Ad</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <select name="adgroup_id" class="form-select" required>
+                        <option value="">Selecciona un Ad Group</option>
+                        {% for adg in adgroups %}
+                            <option value="{{ adg.id }}">{{ adg.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="boton-verde">Continuar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

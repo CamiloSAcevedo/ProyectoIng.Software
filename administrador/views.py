@@ -176,7 +176,7 @@ def aprobar_contenido(request, tipo, objeto_id):
                         revision.estado = "Rechazado"
                 elif tipo == "post":
                     # Solo para posts: publicar en X (Twitter)
-                    #client.create_tweet(text=objeto.nombre)  # o texto, según tu modelo
+                    client.create_tweet(text=objeto.nombre)  # o texto, según tu modelo
                     messages.success(request, "Post aprobado y publicado en X (Twitter).")
                     messages.success(request, "Publicación aprobada.")
             else:
@@ -228,9 +228,6 @@ def crear_post(request):
         tweet_text = request.POST.get("tweet")
         if tweet_text:
             try:
-                #client.create_tweet(text=tweet_text)  # Publica el tweet
-                #messages.success(request, "¡Tweet publicado correctamente!")
-                #ad = Ad.objects.create(texto=tweet_text, usuario= request.user)
                 # Crear la revisión asociada al usuario autenticado
                 revision = Revision.objects.create(
                     usuario=request.user,  # Usuario que está haciendo el request

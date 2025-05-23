@@ -108,7 +108,7 @@
     </div>
     <div class="search-right">
         <!-- Botón Cargar (Excel) -->
-        <form method="post" action="{% url 'cargar_excel' %}" enctype="multipart/form-data" id="form-excel" style="display:inline;">
+        <form method="post" action="{% url 'cargar_excel' %}" enctype="multipart/form-data" id="form-excel" style="display: flex; align-items: center; gap: 10px;">
             {% csrf_token %}
             <label for="excelInput" class="btn-primary">Cargar</label>
             <input type="file" name="archivo_excel" id="excelInput" onchange="document.getElementById('form-excel').submit();">

@@ -1,6 +1,7 @@
 import tweepy
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -24,6 +25,10 @@ from .forms import AdvertiserTikTokForm, CampaignTikTokForm, AdGroupTikTokForm, 
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from administrador.models import Revision
+from clustering.utils import asignar_cluster
+from clustering.models import ModeloEntrenado
+import json
+
 
 # Cargar variables desde el .env
 load_dotenv()
@@ -243,7 +248,7 @@ def crear_campaña(request):
             messages.success(request, "¡Los datos de campaña se ingresaron exitosamente!")
 
             # Evita guardarlo aún en la BD para guardar después con ID de meta
-            #campaña = form.save(commit=False)  
+            campaña = form.save(commit=False)  
 
             # Obtener los datos ingresados por el usuario
             nombre = form.cleaned_data['nombre']
@@ -621,6 +626,13 @@ def mis_vacantes(request):
         contrato = request.POST.get('contrato')
         salario = request.POST.get('salario')
         descripcion = request.POST.get('descripcion')
+        industria = request.POST.get('industria')
+        modalidad = request.POST.get('modalidad')
+        experiencia = request.POST.get('experiencia')
+
+        # Obtener los datos del modelo seleccionado
+        modelo_id = request.POST.get('modelo_clustering')
+        modelo = ModeloEntrenado.objects.get(id=modelo_id)
 
         # Verifica que todos los campos obligatorios estén completos
         if not all([vacante, empresa, ubicacion, contrato, salario]):
@@ -636,7 +648,19 @@ def mis_vacantes(request):
             ubicacion=ubicacion,
             contrato=contrato,
             salario=salario,
-            descripcion=descripcion
+            descripcion=descripcion,
+            industria=industria,
+            modalidad=modalidad,
+            experiencia=experiencia,
+            modelo_clustering=modelo,
+            grupo = asignar_cluster({
+                'ubicacion': ubicacion,
+                'industria': industria,
+                'modalidad': modalidad,
+                'experiencia': experiencia,
+                'descripcion': descripcion
+            }, modelo_clustering=modelo)
+            
         )
         return redirect('vacantes')  # Redirige a la misma página después de guardar
 
@@ -650,32 +674,65 @@ def mis_vacantes(request):
             Q(ubicacion__icontains=query)
             #Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
         )
+        modelos = ModeloEntrenado.objects.all().order_by('-fecha')
     else:
         # Si no hay término de búsqueda, muestra todas las vacantes
         vacantes = Vacante.objects.all()
-
-    return render(request, 'mis_vacantes.html', {'vacantes': vacantes})
+        modelos = ModeloEntrenado.objects.all().order_by('-fecha')
+    return render(request, 'mis_vacantes.html', {'vacantes': vacantes, 'modelos': modelos})
 
 
 
 def cargar_excel(request):
-    if request.method == 'POST':
-        archivo = request.FILES.get('archivo_excel')
-        if archivo:
-            df = pd.read_excel(archivo)  #  pd.read_csv(archivo) si es CSV
-            for _, row in df.iterrows():
-                Vacante.objects.create(
-                    vacante=row['vacante'],
-                    empresa=row['empresa'],
-                    ubicacion=row['ubicacion'],
-                    contrato=row['contrato'],
-                    salario=row['salario'],
-                    descripcion=row.get('descripcion', ''),
-                    industria=row.get('industria', ''),
-                    modalidad=row.get('modalidad', ''),
-                    experiencia=row.get('experiencia', '')
-                )
-        return redirect('vacantes')
+    if request.method == "POST":
+        archivo = request.FILES.get("archivo_excel")
+        modelo_id = request.POST.get("modelo_clustering_id")
+
+        if not archivo or not modelo_id:
+            messages.error(request, "Debes seleccionar un archivo y un modelo.")
+            return redirect("vacantes")
+
+        modelo = ModeloEntrenado.objects.get(id=modelo_id)
+
+        # Leer archivo
+        df = pd.read_excel(archivo)
+        columnas_usadas = modelo.columnas_usadas
+        
+        print("Columnas en DataFrame:", df.columns.tolist())
+        print("Columnas requeridas:", columnas_usadas)
+
+        # Verifica columnas faltantes
+        faltantes = [col for col in columnas_usadas if col not in df.columns]
+        print("Columnas faltantes reales:", faltantes)
+        
+
+        for _, fila in df.iterrows():
+            datos_dict = {col: fila.get(col, "") for col in columnas_usadas}
+            try:
+                grupo = asignar_cluster(datos_dict, modelo)
+            except KeyError as e:
+                print("Columnas faltantes:", e)
+                return HttpResponse("Error: Faltan columnas requeridas en el Excel.", status=400)
+
+            grupo = asignar_cluster(datos_dict, modelo)
+
+            Vacante.objects.create(
+                vacante=fila.get("vacante", ""),
+                empresa=fila.get("empresa", ""),
+                ubicacion=fila.get("ubicacion", ""),
+                contrato=fila.get("contrato", ""),
+                salario=fila.get("salario", ""),
+                descripcion=fila.get("descripcion", ""),
+                industria=fila.get("industria", ""),
+                modalidad=fila.get("modalidad", ""),
+                experiencia=fila.get("experiencia", ""),
+                grupo=grupo,
+                modelo_clustering=modelo
+            )
+
+        messages.success(request, "Vacantes cargadas exitosamente.")
+        return redirect("vacantes")
+
     
 # ---------------------------- AUTO RELLENO EN POST --------------------------------#
 

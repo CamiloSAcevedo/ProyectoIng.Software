@@ -1,0 +1,30 @@
+{% extends 'panel.html' %}  
+
+{% block content %}
+<h2>Modelos entrenados</h2>
+<div class="card-container">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fecha</th>
+            <th>Columnas</th>
+            <th>Peso columnas</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in modelos %}
+        <tr>
+            <td>{{ m.nombre }}</td>
+            <td>{{ m.fecha }}</td>
+            <td>{{ m.columnas_usadas }}</td>
+            <td>{{ m.pesos_columnas }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+</div>
+
+{% endblock content %}

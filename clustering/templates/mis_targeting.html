@@ -1,0 +1,30 @@
+{% extends 'panel.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Mis Targetings</h1>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for targeting in targets %}
+        <div class="col">
+            <div class="card border rounded-3 shadow-sm p-3">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Modelo: {{ targeting.modelo_clustering.nombre }}</h5>
+                    <p class="card-text"><strong>Cluster:</strong> {{ targeting.cluster }}</p>
+                    <p class="card-text"><strong>Ubicación:</strong> {{ targeting.meta_location }}</p>
+                    <p class="card-text"><strong>Nivel Educativo:</strong> {{ targeting.education_level }}</p>
+                    <p class="card-text"><strong>Edad:</strong> {{ targeting.age_min }} - {{ targeting.age_max }}</p>
+                    <p class="card-text"><strong>Intereses:</strong>
+                        {% for interest in targeting.interests %}
+                            <span class="badge bg-primary">{{ interest }}</span>
+                        {% empty %}
+                            <em>Sin intereses</em>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

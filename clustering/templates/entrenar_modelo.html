@@ -1,0 +1,135 @@
+{% extends 'panel.html' %} 
+
+{% block content %}
+<style>
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-help {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-top: 3px;
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { opacity: 0; display: none; }
+    }
+
+    .alert {
+        animation: fadeOut 6s ease-in-out forwards;
+    }
+
+    .btn-pill {
+        background-color: #3dc971;
+        border: none;
+        color: white;
+        border-radius: 25px;
+        padding: 8px 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="form-container">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert 
+                        {% if message.tags == 'success' %}alert-success
+                        {% elif message.tags == 'error' %}alert-danger
+                        {% elif message.tags == 'info' %}alert-dismissible{% endif %} 
+                        alert-dismissible fade show" role="alert">
+                        
+                        {{ message }}
+
+                        {% if message.tags == 'success' %}
+                            <a href="{% url 'mis_modelos' %}" class="btn btn-primary btn-sm">Ver modelos creados</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <h2>Entrenar modelo de clustering</h2>
+            <div style="height: 40px;"></div> 
+
+            <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <h4>
+            {{ form.archivo_excel.label_tag }}<br>
+            {{ form.archivo_excel }}
+        </h4>
+
+        <div style="height: 10px;"></div> 
+
+        <h4>
+            {{ form.nombre.label_tag }}<br>
+            {{ form.nombre }}
+        </h4>
+
+        <div style="height: 10px;"></div> 
+
+        <div class="mb-3">
+            <strong>{{ form.columnas.label }}</strong><br>
+            {{ form.columnas }}
+        </div>
+
+        <div lass="mb-3"><strong>Asignar pesos a columnas</strong></div>
+        <table class="table table-bordered table-sm" style="width: auto;">
+        <thead>
+            <tr>
+            <th>Columna</th>
+            <th>Peso</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-pesos">
+            {% for field in form %}
+            {% if "peso_" in field.name %}
+                <tr class="fila-peso" data-columna="{{ field.name|slice:'5:' }}">
+                <td>{{ field.label|cut:"Peso para '"|cut:"'" }}</td>
+                <td>{{ field }}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+        </table>
+
+
+        <button type="submit" class="btn-pill">Entrenar modelo</button>
+        </form>
+            
+        
+</div>
+
+<script>
+  function actualizarFilasPeso() {
+    const checkboxes = document.querySelectorAll('input[name="columnas"]:checked');
+    const columnasSeleccionadas = Array.from(checkboxes).map(cb => cb.value);
+    
+    document.querySelectorAll('.fila-peso').forEach(fila => {
+      const columna = fila.dataset.columna;
+      if (columnasSeleccionadas.includes(columna)) {
+        fila.style.display = '';
+      } else {
+        fila.style.display = 'none';
+      }
+    });
+  }
+
+  // Ejecutar al cargar
+  actualizarFilasPeso();
+
+  // Agregar evento a cada checkbox
+  document.querySelectorAll('input[name="columnas"]').forEach(checkbox => {
+    checkbox.addEventListener('change', actualizarFilasPeso);
+  });
+</script>
+
+
+{% endblock content %}

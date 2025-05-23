@@ -1,28 +1,82 @@
 {% extends 'panel.html' %}
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow" style="width: 35rem;">
+<style>
+    .boton-verde {
+        background-color: #45d482;
+        color: white !important;
+        font-weight: bold;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        text-decoration: none !important;
+    }
+
+    .boton-verde:hover {
+        background-color: #36c172;
+        color: white !important;
+    }
+
+    .card-custom {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    }
+
+    form label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+    }
+
+    form select, form textarea {
+        border-radius: 8px;
+        padding: 0.5rem;
+        font-size: 1rem;
+        width: 100%;
+        border: 1px solid #ccc;
+    }
+
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .ad-info p {
+        font-size: 1.05rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-start pt-5" style="min-height: 80vh;">
+    <div class="card card-custom p-4" style="width: 100%; max-width: 60rem;">
         <div class="card-body">
             <h2 class="card-title mb-4 text-center">Revisión de Ad TikTok</h2>
-            <p><b>Nombre:</b> {{ ad.nombre }}</p>
-            <p><b>Contenido:</b> {{ ad.contenido }}</p>
-            {% if ad.imagen %}
-                <img src="{{ ad.imagen.url }}" class="img-fluid mb-3" style="max-height: 180px;">
-            {% endif %}
+
+            <div class="ad-info mb-4">
+                <p><b>Nombre:</b> {{ ad.nombre }}</p>
+                <p><b>Contenido:</b> {{ ad.contenido }}</p>
+                {% if ad.imagen %}
+                    <img src="{{ ad.imagen.url }}" class="img-fluid mb-3 rounded" style="max-height: 180px;">
+                {% endif %}
+            </div>
+
             <form method="post">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="estado" class="form-label"><b>Cambiar estado</b></label>
-                    <select name="estado" id="estado" class="form-control">
+                <div class="form-section">
+                    <label for="estado">Cambiar estado</label>
+                    <select name="estado" id="estado">
                         <option value="APROBADO" {% if ad.estado == "APROBADO" %}selected{% endif %}>Aprobar</option>
                         <option value="RECHAZADO" {% if ad.estado == "RECHAZADO" %}selected{% endif %}>Rechazar</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label for="comentario" class="form-label"><b>Comentario</b></label>
-                    <textarea name="comentario" id="comentario" class="form-control">{{ ad.comentario_admin }}</textarea>
+
+                <div class="form-section">
+                    <label for="comentario">Comentario</label>
+                    <textarea name="comentario" id="comentario" rows="4">{{ ad.comentario_admin }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-success">Guardar</button>
+
+                <button type="submit" class="boton-verde">Guardar</button>
             </form>
         </div>
     </div>

@@ -1,21 +1,63 @@
 {% extends 'panel.html' %}
 {% block content %}
+<style>
+    .boton-verde {
+        background-color: #45d482;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .boton-verde:hover {
+        background-color: #36c172;
+        color: white;
+        text-decoration: none;
+    }
+
+    .card-custom {
+        border-radius: 12px;
+        border: 1px solid #eee;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
+
+    .btn-link-custom {
+        color: #45d482;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .btn-link-custom:hover {
+        color: #36c172;
+        text-decoration: underline;
+    }
+</style>
+
 <div class="container d-flex flex-column align-items-center" style="min-height: 80vh;">
     <h2 class="mb-4 text-center">Ads TikTok</h2>
+
     {% if not adgroup_id %}
-        <a class="btn btn-success mb-3" href="{% url 'ad_tiktok_create_select_adgroup' %}">Nuevo Ad</a>
+        <a class="boton-verde mb-3" href="{% url 'ad_tiktok_create_select_adgroup' %}">Nuevo Ad</a>
     {% endif %}
+
     <div class="w-100 d-flex flex-wrap justify-content-center">
         {% for ad in ads %}
-            <div class="card m-2" style="width: 22rem;">
+            <div class="card card-custom m-2" style="width: 22rem;">
                 <div class="card-body">
                     <h5 class="card-title">{{ ad.nombre }}</h5>
                     <p class="card-text">{{ ad.contenido }}</p>
+
                     {% if ad.url %}
-                        <a href="{{ ad.url }}" target="_blank" class="btn btn-link p-0">Ver URL</a><br>
+                        <a href="{{ ad.url }}" target="_blank" class="btn-link-custom d-block mb-2">Ver URL</a>
                     {% endif %}
+
                     {% if ad.imagen %}
-                        <img src="{{ ad.imagen.url }}" class="img-fluid mt-2" style="max-height: 180px;">
+                        <img src="{{ ad.imagen.url }}" class="img-fluid mt-2" style="max-height: 180px; border-radius: 8px;">
                     {% endif %}
                 </div>
             </div>
@@ -23,6 +65,7 @@
             <div class="alert alert-info mt-3">No hay Ads.</div>
         {% endfor %}
     </div>
-    <a href="{% url 'adgroup_tiktok_all' %}" class="btn btn-link mt-3">Volver a Ad Groups</a>
+
+    
 </div>
 {% endblock %}

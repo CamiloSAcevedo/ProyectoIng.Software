@@ -52,105 +52,112 @@
 
 </style>
 
-<div class="container mt-5">
+<form method="post" style="margin-top: 1em;" id="formulario-vacante">
     <h3>Definir Targeting para Cluster <strong>{{ cluster }}</strong> del modelo <strong>{{ modelo.nombre }}</strong></h3>
-    
+
     <div class="d-flex justify-content-between" style="text-align: right;">
         <button type="button" class="btn-pill" onclick="generarTargetingIA()">✨Generar Targeting Automático con IA</button>
     </div>
 
-    <form method="post" style="margin-top: 1em;" id="formulario-vacante">
+    <div id="sugerencia-targeting" class="card card-custom mt-4 d-none">
+        <h5>Targeting recomendado por IA:</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Ubicación:</strong> <span id="sug_meta_location"></span></li>
+            <li class="list-group-item"><strong>Nivel educativo:</strong> <span id="sug_education_level"></span></li>
+            <li class="list-group-item"><strong>Edad mínima:</strong> <span id="sug_age_min"></span></li>
+            <li class="list-group-item"><strong>Edad máxima:</strong> <span id="sug_age_max"></span></li>
+            <li class="list-group-item"><strong>Intereses:</strong> <span id="sug_interests"></span></li>
+        </ul>
+    </div>
 
-        <div class="card-container">
-
-            <div class="card card-custom">
-                {% csrf_token %}
-
-                <div id="alerta-exito" class="alert alert-success mt-3 d-none" role="alert">
-                    Targeting generado exitosamente.
-                </div>
-
-                <div class="mb-2">
-                    <label class="form-label">Ubicación (meta):</label>
-                    <input type="text" class="form-control" name="meta_location" id="id_meta_location">
-                </div>
-
-                <div class="mb-2">
-                    <label class="form-label">Nivel educativo: </label>
-                    <input type="text" class="form-control" name="education_level" id="id_education_level">
-                </div>
-
-                <div class="mb-2">
-                    <label class="form-label">Edad mínima: </label>
-                    <input type="number" class="form-control" name="age_min" id="id_age_min">
-                </div>
-
-                <div class="mb-2">
-                    <label class="form-label">Edad máxima: </label>
-                    <input type="number" class="form-control" name="age_max" id="id_age_max">
-                </div>
-
-                <div class="mb-2">
-                    <label class="form-label">Intereses</label><br>
-                    {% for interest in interests %}
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="interests" value="{{ interest }}" id="interest_{{ forloop.counter }}">
-                            <label class="form-check-label" for="interest_{{ forloop.counter }}">{{ interest }}</label>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <button type="submit" class="btn-pill">Guardar Targeting</button>
-
-                <div style="height: 50px;"></div> 
-
+    {% csrf_token %}
+    <div class="card-container">
+        <div class="card card-custom">
+            <div id="alerta-exito" class="alert alert-success mt-3 d-none" role="alert">
+                Targeting generado exitosamente.
             </div>
-            
+
+            <div class="mb-2">
+                <label class="form-label">Ubicación (meta):</label>
+                <select name="meta_location" class="form-control" id="id_meta_location">
+                    {% for value, label in form.fields.meta_location.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Nivel educativo:</label>
+                <select name="education_level" class="form-control" id="id_education_level">
+                    {% for value, label in form.fields.education_level.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Edad mínima:</label>
+                <input type="number" class="form-control" name="age_min" id="id_age_min">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Edad máxima:</label>
+                <input type="number" class="form-control" name="age_max" id="id_age_max">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label">Intereses:</label><br>
+                {% for value, label in form.fields.interests.choices %}
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="interests" value="{{ value }}" id="interest_{{ forloop.counter }}">
+                        <label class="form-check-label" for="interest_{{ forloop.counter }}">{{ label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn-pill">Guardar Targeting</button>
+            <div style="height: 50px;"></div>
         </div>
+    </div>
+</form>
 
-    </form>
-
-</div>
 
 
 <script>
-    function generarTargetingIA() {
-        fetch("{% url 'generar_targeting_ia' modelo.pk cluster %}", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": "{{ csrf_token }}",
-                "Content-Type": "application/json"
-            }
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                // Mostrar mensaje de éxito
-                const alerta = document.getElementById("alerta-exito");
-                alerta.classList.remove("d-none");
+function generarTargetingIA() {
+    fetch("{% url 'generar_targeting_ia' modelo.pk cluster %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // Mostrar tarjeta de sugerencia
+            document.getElementById("sugerencia-targeting").classList.remove("d-none");
 
-                // Llenar campos simples
-                document.getElementById("id_meta_location").value = data.meta_location;
-                document.getElementById("id_education_level").value = data.education_level;
-                document.getElementById("id_age_min").value = data.age_min;
-                document.getElementById("id_age_max").value = data.age_max;
+            document.getElementById("sug_meta_location").textContent = data.meta_location;
+            document.getElementById("sug_education_level").textContent = data.education_level;
+            document.getElementById("sug_age_min").textContent = data.age_min;
+            document.getElementById("sug_age_max").textContent = data.age_max;
+            document.getElementById("sug_interests").textContent = data.interests.join(", ");
 
-                // Llenar intereses si es MultipleChoiceField
-                const interestsSelect = document.getElementById("id_interests");
-                if (interestsSelect && interestsSelect.options) {
-                    for (let i = 0; i < interestsSelect.options.length; i++) {
-                        const option = interestsSelect.options[i];
-                        option.selected = data.interests.includes(option.value);
-                    }
-                }
-            } else {
-                alert("Error al generar targeting con IA: " + data.error);
-            }
-        })
-        .catch(error => {
-            alert("Ocurrió un error inesperado: " + error);
-        });
-    }
+            // Guardar datos en variables temporales para luego copiarlos
+            window.targetingSugerido = data;
+
+            // Opcional: Scroll hacia la tarjeta
+            document.getElementById("sugerencia-targeting").scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert("Error al generar targeting con IA: " + data.error);
+        }
+    })
+    .catch(error => {
+        alert("Ocurrió un error inesperado: " + error);
+    });
+}
 </script>
+
 
 {% endblock %}

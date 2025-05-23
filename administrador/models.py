@@ -154,6 +154,7 @@ class Ad(models.Model):
 
     plataforma = models.CharField(max_length=50, choices=PLATAFORMAS, default="facebook")
     nombre = models.CharField(max_length=250)
+    status = models.CharField(max_length=100, blank=True)
     revision = models.OneToOneField(Revision, on_delete=models.CASCADE, null=True, blank=True) # Campo para aprovación
     created_at = models.DateField(default=date.today)
 

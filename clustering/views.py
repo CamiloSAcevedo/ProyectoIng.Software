@@ -96,6 +96,11 @@ def ver_modelos_entrenados(request):
     modelos = ModeloEntrenado.objects.order_by('-fecha')
     return render(request, 'mis_modelos.html', {'modelos': modelos})
 
+def mis_targeting(request):
+    targets = ClusterTargeting.objects.all()
+    return render(request, 'mis_targeting.html', {'targets': targets})
+
+
 
 def ver_clusters(request):
     modelos = ModeloEntrenado.objects.order_by('-fecha')
@@ -135,6 +140,7 @@ def definir_targeting(request, modelo_id, cluster):
 
     if request.method == 'POST':
         form = ClusterTargetingForm(request.POST)
+        print(request.POST)  # <- Esto te dirá si meta_location e interests están llegando
         if form.is_valid():
             targeting = form.save(commit=False)
             targeting.modelo_clustering = modelo
@@ -143,6 +149,8 @@ def definir_targeting(request, modelo_id, cluster):
             return redirect('mis_clusters')
         else:
             messages.error(request, message="Error al crear el targeting...")
+            print(form.errors)  # Para depuración en consola
+            messages.error(request, "Revisa los campos. No se pudo guardar.")
     else:
         form = ClusterTargetingForm()
 
@@ -173,6 +181,8 @@ def generar_targeting_ia(request, modelo_id, cluster):
         except Exception as e:
             return JsonResponse({ "success": False, "error": str(e) })
     return JsonResponse({ "success": False, "error": "Método no permitido" }, status=405)
+
+
 
 
 

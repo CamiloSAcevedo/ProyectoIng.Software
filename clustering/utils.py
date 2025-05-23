@@ -242,6 +242,37 @@ def generar_targeting_desde_gemini(descripcion):
     - age_min (entero)
     - age_max (entero)
 
+    Aquí tienes las pociones disponibles para algunos de los campos:
+    META_INTEREST_CHOICES = [
+        ("technology", "Technology"),
+        ("software_development", "Software Development"),
+        ("data_science", "Data Science & Analytics"),
+        ("digital_marketing", "Digital Marketing"),
+        ("finance", "Finance & Accounting"),
+        ("healthcare", "Healthcare"),
+        ("human_resources", "Human Resources"),
+        ("education_training", "Education & Training"),
+        ("customer_service", "Customer Service"),
+        ("sales", "Sales"),
+        ("logistics", "Logistics & Supply Chain"),
+    ]
+
+    META_EDUCATION_CHOICES = [
+        ("high_school", "High School"),
+        ("college", "College"),
+        ("associate_degree", "Associate Degree"),
+        ("in_graduate_school", "In Graduate School"),
+        ("doctorate_degree", "Doctorate Degree"),
+    ]
+
+    META_LOCATION_CHOICES = [
+        ("New York", "New York"),
+        ("Bogotá", "Bogotá"),
+        ("Mexico City", "Mexico City"),
+        ("Lima", "Lima"),
+        ("Madrid", "Madrid"),
+    ]
+
     Devuelve **únicamente el JSON puro sin ningún texto extra, ni etiquetas Markdown ni explicaciones**.
     Recuerda generar un solo targeting que combine las características comunes de las vacantes.
 

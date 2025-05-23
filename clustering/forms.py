@@ -44,11 +44,16 @@ class EntrenamientoForm(forms.Form):
 
 META_INTEREST_CHOICES = [
     ("technology", "Technology"),
-    ("sports", "Sports"),
-    ("travel", "Travel"),
-    ("beauty", "Beauty"),
-    ("fitness", "Fitness"),
-    ("education", "Education"),
+    ("software_development", "Software Development"),
+    ("data_science", "Data Science & Analytics"),
+    ("digital_marketing", "Digital Marketing"),
+    ("finance", "Finance & Accounting"),
+    ("healthcare", "Healthcare"),
+    ("human_resources", "Human Resources"),
+    ("education_training", "Education & Training"),
+    ("customer_service", "Customer Service"),
+    ("sales", "Sales"),
+    ("logistics", "Logistics & Supply Chain"),
 ]
 
 META_EDUCATION_CHOICES = [
@@ -60,11 +65,11 @@ META_EDUCATION_CHOICES = [
 ]
 
 META_LOCATION_CHOICES = [
-    ("New York", "New York"),
+    ("Medellin", "Medellin"),
     ("Bogotá", "Bogotá"),
-    ("Mexico City", "Mexico City"),
-    ("Lima", "Lima"),
-    ("Madrid", "Madrid"),
+    ("Itagui", "Itagui"),
+    ("Sabaneta", "Sabaneta"),
+    ("Cali", "Cali"),
 ]
 
 class ClusterTargetingForm(forms.ModelForm):

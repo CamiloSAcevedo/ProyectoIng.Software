@@ -38,6 +38,15 @@ class Migration(migrations.Migration):
                 ('link', models.URLField(blank=True, null=True)),
                 ('call_to_action', models.CharField(choices=[('LEARN_MORE', 'Más información'), ('SIGN_UP', 'Registrarse'), ('SHOP_NOW', 'Comprar ahora'), ('CONTACT_US', 'Contáctanos'), ('SUBSCRIBE', 'Suscribirse'), ('GET_OFFER', 'Obtener oferta')], max_length=50)),
                 ('created_at', models.DateField(default=datetime.date.today)),
+                ('creative_id', models.CharField(blank=True, max_length=100)),
+                ('nombre', models.CharField(max_length=255)),
+                ('name', models.CharField(max_length=255)),
+                ('message', models.TextField(blank=True, null=True)),
+                ('body', models.TextField(blank=True, null=True)),
+                ('image_url', models.URLField(blank=True, null=True)),
+                ('link', models.URLField(blank=True, null=True)),
+                ('call_to_action', models.CharField(choices=[('LEARN_MORE', 'Más información'), ('SIGN_UP', 'Registrarse'), ('SHOP_NOW', 'Comprar ahora'), ('CONTACT_US', 'Contáctanos'), ('SUBSCRIBE', 'Suscribirse'), ('GET_OFFER', 'Obtener oferta')], max_length=50)),
+                ('created_at', models.DateField(default=datetime.date.today)),
             ],
         ),
         migrations.CreateModel(
@@ -58,8 +67,10 @@ class Migration(migrations.Migration):
         ),
         migrations.CreateModel(
             name='AdSet',
+            name='AdSet',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('adset_id', models.CharField(blank=True, max_length=100)),
                 ('adset_id', models.CharField(blank=True, max_length=100)),
                 ('nombre', models.CharField(max_length=255)),
                 ('daily_budget', models.DecimalField(decimal_places=2, max_digits=10, null=True)),

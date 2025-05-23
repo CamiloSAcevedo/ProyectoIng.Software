@@ -36,6 +36,19 @@
         90% { opacity: 1; }
         100% { opacity: 0; display: none; }
     }
+    .btn-primary {
+        background-color: #3dc971; /* Color de fondo */
+        border: none; /* Sin borde */
+        color: white; /* Color del texto */
+        
+        cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+        font-weight: bold; /* Texto en negrita */
+        transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-primary:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+    }
 
     .alert {
         animation: fadeOut 6s ease-in-out forwards;
@@ -80,7 +93,9 @@
                     <span class="form-help">Define el objetivo principal de tu campaña.</span>
                 </div>
                 {{ form.plataforma }}
-                <button type="submit" class="btn btn-primary">Crear Campaña</button> 
+                <div style="text-align:center;">
+                    <button type="submit" class="btn btn-primary w-100">Crear Campaña</button>
+                </div>
 
             </form>
             

@@ -36,6 +36,20 @@
         90% { opacity: 1; }
         100% { opacity: 0; display: none; }
     }
+    
+    .btn-primary {
+        background-color: #3dc971; /* Color de fondo */
+        border: none; /* Sin borde */
+        color: white; /* Color del texto */
+        
+        cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+        font-weight: bold; /* Texto en negrita */
+        transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-primary:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+    }
 
     .alert {
         animation: fadeOut 6s ease-in-out forwards;
@@ -75,7 +89,7 @@
                 {% endfor %}
             {% endif %}
 
-            <h2>Crear Ad</h2>
+            <h2 style="text-align:center;">Crear Ad</h2>
 
             <form method="POST" action="{% url 'crear_ad' %}">
                 {% csrf_token %}
@@ -99,7 +113,7 @@
                 </div>
 
 
-                <button type="submit" class="btn btn-primary">Crear ad</button> 
+                <button type="submit" class="btn btn-primary w-100">Crear Ad</button> 
                {{ form.plataforma }}
             </form>
 

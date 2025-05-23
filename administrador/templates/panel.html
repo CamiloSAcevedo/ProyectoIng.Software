@@ -85,7 +85,6 @@
     .btn-logout:hover { /* Estilo al pasar el mouse sobre el botón de cerrar sesión */
         background-color: transparent; /* Fondo transparente */
         border-color: black; /* Borde negro */
-        border-color: black; /* Borde negro */
     }
     .icono { /* Estilo de los iconos */
         width: 20px;  /* Ancho del icono */
@@ -107,6 +106,11 @@
         margin-right: 8px; /* Espacio entre icono y texto */
         vertical-align: middle; /* Alineación vertical */
     }
+    .btn-light {
+        border: none;
+    }
+
+
 
     </style>
 </head>
@@ -287,7 +291,7 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'ad' %}">Crear ad</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_ads' %}">Mis ads</a></li>
-                    <li><a class="dropdown-item" href="{% url 'mis_solicitudes_contenido' 'ad' %}">Solicitudes de ads</a></li>
+                    
                     <!-- Enlace a administración ads -->
                     <li><a class="dropdown-item" href="{% url 'mis_solicitudes_contenido' 'ad' %}">Solicitudes de ads</a></li>
                     <!-- Enlace a administración ads -->
@@ -312,15 +316,6 @@
 
         </ul>
 
-
-        <!-- Enlace a "Estadísticas" -->
-        <a href="#" class="btn btn-light">
-            <img src="{% static 'images/estadisticas_icono.png' %}" class="icono"> Estadisticas
-        </a>
-        <!-- Enlace a "Perfil" -->
-        <a href="#" class="btn btn-light">
-            <img src="{% static 'images/user_icono.png' %}" class="icono"> Perfil
-        </a>
        
 
         <!-- Botón de cerrar sesión -->

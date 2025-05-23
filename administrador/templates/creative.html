@@ -37,6 +37,36 @@
         100% { opacity: 0; display: none; }
     }
 
+    .btn-primary {
+        background-color: #3dc971; /* Color de fondo */
+        border: none; /* Sin borde */
+        color: white; /* Color del texto */
+        
+        cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+        font-weight: bold; /* Texto en negrita */
+        transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-primary:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+    }
+
+    .btn-generar {
+        background-color: white; /* Color de fondo */
+        border: 1px solid #3dc971; /* Borde verde de 2px */
+        color: #3dc971; /* Color del texto */
+        
+        cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+        font-weight: normal; /* Texto en negrita */
+        transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-generar:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+        color: white; /* Cambiar el color del texto al pasar el mouse */
+    }
+
+
     .alert {
         animation: fadeOut 6s ease-in-out forwards;
     }
@@ -57,7 +87,7 @@
                 {% endfor %}
             {% endif %}
 
-            <h2>Crear Creative</h2>
+            <h2 style="text-align:center;">Crear Creative</h2>
 
             <form method="POST">
                 {% csrf_token %}
@@ -99,7 +129,7 @@
                     <label for="prompt-message">Generar mensaje con IA:</label>
                     <textarea id="prompt-message" class="form-control" placeholder="Describe qué debe decir el mensaje..."></textarea>
 
-                    <button type="button" class="btn btn-outline-primary mt-2" onclick="generarMessage()">Generar mensaje</button>
+                    <button type="button" class="btn btn-generar mt-2" onclick="generarMessage()">Generar mensaje</button>
                 </div>
                
 
@@ -114,7 +144,7 @@
                 <div class="form-group">
                     <label for="prompt-body">Generar cuerpo con IA:</label>
                     <textarea id="prompt-body" class="form-control" placeholder="Describe el contenido del cuerpo del anuncio..."></textarea>
-                    <button type="button" class="btn btn-outline-primary mt-2" onclick="generarBody()">Generar cuerpo</button>
+                    <button type="button" class="btn btn-generar mt-2" onclick="generarBody()">Generar cuerpo</button>
                 </div>
 
                 <div class="form-group">
@@ -135,7 +165,7 @@
                     <small class="form-text">Dirección web a la que será dirigido el usuario cuando haga clic en el anuncio.</small>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Crear Creative</button>
+                <button type="submit" class="btn btn-primary w-100">Crear Creative</button>
                 {{ form.plataforma }}
                 
             </form>

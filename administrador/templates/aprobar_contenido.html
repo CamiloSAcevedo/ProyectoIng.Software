@@ -1,6 +1,21 @@
 {% extends 'panel.html' %}
 
 {% block content %}
+<style>
+    .btn-success {
+        background-color: #3dc971; /* Color de fondo */
+        border: none; /* Sin borde */
+        color: white; /* Color del texto */
+        
+        cursor: pointer; /* Cambiar el cursor al pasar el mouse */
+        font-weight: bold; /* Texto en negrita */
+        transition: background-color 0.3s ease; /* Animación al pasar el mouse */
+    }
+
+    .btn-success:hover {
+        background-color: #9ee4b8; /* Cambiar el color al pasar el mouse */
+    }
+</style>
 <div class="container mt-4">
     <h2 class="mb-4">Revisión de {{ tipo|title }}</h2>
     <div class="card p-4 shadow-sm">
@@ -24,7 +39,7 @@
                 <label for="comentario" class="form-label">Comentario</label>
                 <textarea name="comentario" id="comentario" class="form-control" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-success">Guardar</button>
+            <button type="submit" class="btn btn-success w-100">Guardar</button>
         </form>
     </div>
 </div>

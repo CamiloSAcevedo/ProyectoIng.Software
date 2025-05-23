@@ -47,6 +47,12 @@ class Campaign(models.Model):
         ('LEAD_GENERATION', 'Leads'),
     ]
 
+    PLATAFORMAS = [
+        ('facebook', 'Facebook'),
+        ('instagram', 'Instagram'),
+    ]
+
+    plataforma = models.CharField(max_length=50, choices=PLATAFORMAS, default="facebook")
     nombre = models.CharField(max_length=255)
     objective = models.CharField(max_length=250, choices=OBJECTIVES, default="REACH") 
 
@@ -82,6 +88,12 @@ class AdSet(models.Model):
         ('LANDING_PAGE_VIEWS', 'Landing page'),
     ]
 
+    PLATAFORMAS = [
+        ('facebook', 'Facebook'),
+        ('instagram', 'Instagram'),
+    ]
+
+    plataforma = models.CharField(max_length=50, choices=PLATAFORMAS, default="facebook")
     nombre = models.CharField(max_length=255)
     daily_budget = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     billing_event = models.CharField(max_length=250, choices=BILLING_EVENTS, blank=True, default="REACH") 
@@ -98,6 +110,12 @@ class Creative(models.Model):
     # Keys
     creative_id = models.CharField(max_length=100, blank=True) 
 
+    PLATAFORMAS = [
+        ('facebook', 'Facebook'),
+        ('instagram', 'Instagram'),
+    ]
+
+    plataforma = models.CharField(max_length=50, choices=PLATAFORMAS, default="facebook")
     nombre = models.CharField(max_length=255) # Nombre interno para identificación en la API
     name = models.CharField(max_length=255) # Título visible en el anuncio
     message = models.TextField(blank=True, null=True)  # Capta la atención inicial, PRINCIPAL
@@ -132,6 +150,12 @@ class Ad(models.Model):
         ('RECHAZADO', 'Rechazado'),
     ]
     
+    PLATAFORMAS = [
+        ('facebook', 'Facebook'),
+        ('instagram', 'Instagram'),
+    ]
+
+    plataforma = models.CharField(max_length=50, choices=PLATAFORMAS, default="facebook")
     nombre = models.CharField(max_length=250)
     status = models.CharField(max_length=100, blank=True)
 

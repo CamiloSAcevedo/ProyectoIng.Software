@@ -79,12 +79,22 @@
                     {{ form.objective }}
                     <span class="form-help">Define el objetivo principal de tu campaña.</span>
                 </div>
-
+                {{ form.plataforma }}
                 <button type="submit" class="btn btn-primary">Crear Campaña</button> 
+
             </form>
             
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const plataforma = localStorage.getItem('selectedSocial') || 'facebook';
+        const input = document.getElementById('plataforma-input');
+        if (input) {
+            input.value = plataforma;
+        }
+    });
+</script>
 
 {% endblock content %}

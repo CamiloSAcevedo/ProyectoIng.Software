@@ -138,6 +138,7 @@
                 <select id="social-selector" class="form-select">
                     <option value="x">X</option>
                     <option value="facebook">Facebook</option>
+                    <option value="instagram">Instagram</option>
                 </select>
             </div>
 
@@ -204,9 +205,57 @@
                     <li><a class="dropdown-item" href="{% url 'mis_creatives' %}">Mis creatives</a></li>
                 </ul>
             </li>
+            <!-------------------------------------------- INSTAGRAM ------------------------------------------>
+            <!-- Campañas - Submenú desplegable -->
+            <li class="nav-item social-instagram">
+
+                <a class="nav-link dropdown-toggle" href="#"><img src="{% static 'images/campana_icono.png' %}" class="icono">Campañas</a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'campaña' %}">Crear campaña</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_campañas' %}">Mis campañas</a></li>
+                </ul>
+            </li>
+            <!-- Ad sets - Submenú desplegable -->
+            <li class="nav-item social-instagram">
+
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/adset_icono.png' %}" class="icono"> Ad sets</a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'ad_set' %}">Crear adset</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_adsets' %}">Mis adsets</a></li>
+                </ul>
+            </li>
+
+            <!-- Ads - Submenú desplegable -->
+            <li class="nav-item social-instagram">
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/ad_icono.png' %}" class="icono"> Ads</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'ad' %}">Crear ad</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_ads' %}">Mis ads</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_solicitudes_contenido' 'ad' %}">Solicitudes de ads</a></li>
+                    <!-- Enlace a administración ads -->
+                    {% if request.user.is_staff %}
+                    <!-- Solo para staff -->
+                    <li><a href="{% url 'revisar_contenido_pendiente' 'ad' %}">Revisar Ads pendientes</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+
+            <!-- Creatives - Submenú desplegable -->
+            <li class="nav-item social-instagram">
+
+                <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/creative_icono.png' %}" class="icono"> Creatives</a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'crear_creative' %}">Crear creative</a></li>
+                    <li><a class="dropdown-item" href="{% url 'mis_creatives' %}">Mis creatives</a></li>
+                </ul>
+            </li>
+
         </ul>
-        
-      
+
+
         <!-- Enlace a "Estadísticas" -->
         <a href="#" class="btn btn-light">
             <img src="{% static 'images/estadisticas_icono.png' %}" class="icono"> Estadisticas
@@ -280,6 +329,8 @@
                 const selected = this.value;
                 localStorage.setItem('selectedSocial', selected); // Guardar preferencia
                 updateSidebar(selected);
+
+            fetch(`/set_plataforma/?plataforma=${selected}`);
             });
     
             // Aplicar filtro al cargar

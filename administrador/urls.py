@@ -10,6 +10,7 @@ urlpatterns = [
     path('creative/generar-body/', views.generar_body_ia, name='generar_body_ia'),
     path('buscar_vacante/', views.buscar_vacante, name='buscar_vacante'),
 
+    path('set_plataforma/', views.set_plataforma, name='set_plataforma'),
 
     # Post X
     path('crear_post/', views.crear_post, name='crear_post'),

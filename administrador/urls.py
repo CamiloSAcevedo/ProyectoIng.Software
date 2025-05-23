@@ -40,6 +40,37 @@ urlpatterns = [
     # ---------------------- VER MIS VACANTES ----------------------#
     path('vacantes/', views.mis_vacantes, name='mis_vacantes'),
     path('cargar_excel/', views.cargar_excel, name='cargar_excel'),
+
+    # ---------------------- POSTS EN TIKTOK ----------------------#
+    path('crear_post_tiktok/', views.crear_post_tiktok, name='crear_post_tiktok'),
+    path('mis_solicitudes_contenido/post_tiktok/', views.mis_solicitudes_post_tiktok, name='mis_solicitudes_contenido_post_tiktok'),
+    path('revisar_contenido_pendiente/post_tiktok/', views.revisar_contenido_pendiente_post_tiktok, name='revisar_contenido_pendiente_post_tiktok'),
+
+    path('tiktok/advertisers/', views.advertiser_tiktok_list, name='advertiser_tiktok_list'),
+    path('tiktok/advertisers/create/', views.advertiser_tiktok_create, name='advertiser_tiktok_create'),
+    path('tiktok/advertisers/<int:advertiser_id>/campaigns/', views.campaign_tiktok_list, name='campaign_tiktok_list'),
+    path('tiktok/advertisers/<int:advertiser_id>/campaigns/create/', views.campaign_tiktok_create, name='campaign_tiktok_create'),
+    path('tiktok/campaigns/<int:campaign_id>/adgroups/', views.adgroup_tiktok_list, name='adgroup_tiktok_list'),
+    path('tiktok/campaigns/<int:campaign_id>/adgroups/create/', views.adgroup_tiktok_create, name='adgroup_tiktok_create'),
+    path('tiktok/adgroups/<int:adgroup_id>/ads/', views.ad_tiktok_list, name='ad_tiktok_list'),
+    path('tiktok/adgroups/<int:adgroup_id>/ads/create/', views.ad_tiktok_create, name='ad_tiktok_create'),
+    path('tiktok/adgroups/', views.adgroup_tiktok_all, name='adgroup_tiktok_all'),
+    path('tiktok/ads/', views.ad_tiktok_all, name='ad_tiktok_all'),
+    path('tiktok/adgroups/create/', views.adgroup_tiktok_create_select_campaign, name='adgroup_tiktok_create_select_campaign'),
+    path('tiktok/ads/create/', views.ad_tiktok_create_select_adgroup, name='ad_tiktok_create_select_adgroup'),
+
+    # Listar todos los Ads publicados (público)
+    path('tiktok/ads/', views.ads_tiktok_publicados, name='ads_tiktok_publicados'),
+
+    # Listar Ads pendientes para revisión (solo admin/staff)
+    path('tiktok/ads/pendientes/', views.revisar_ads_tiktok, name='revisar_ads_tiktok'),
+
+    # Aprobar o rechazar un Ad (solo admin/staff)
+    path('tiktok/ads/aprobar/<int:ad_id>/', views.aprobar_rechazar_ad_tiktok, name='aprobar_rechazar_ad_tiktok'),
+
+    # Ver mis solicitudes de Ads (usuario)
+    path('tiktok/ads/mis-solicitudes/', views.mis_solicitudes_ads_tiktok, name='mis_solicitudes_ads_tiktok'),
+
     # -------------------------------------------------#
 
 ]

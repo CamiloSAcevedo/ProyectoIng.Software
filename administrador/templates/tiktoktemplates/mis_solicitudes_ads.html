@@ -1,0 +1,33 @@
+{% extends 'panel.html' %}
+{% block content %}
+<div class="container d-flex flex-column align-items-center" style="min-height: 80vh;">
+    <h2 class="mb-4 text-center">Mis solicitudes de Ads TikTok</h2>
+    <form method="get" class="mb-4" style="width: 250px;">
+        <select name="estado" class="form-select" onchange="this.form.submit()">
+            <option value="">Todos los estados</option>
+            <option value="PENDIENTE" {% if estado_seleccionado == "PENDIENTE" %}selected{% endif %}>Pendiente</option>
+            <option value="APROBADO" {% if estado_seleccionado == "APROBADO" %}selected{% endif %}>Aprobado</option>
+            <option value="RECHAZADO" {% if estado_seleccionado == "RECHAZADO" %}selected{% endif %}>Rechazado</option>
+        </select>
+    </form>
+    <div class="w-100 d-flex flex-wrap justify-content-center">
+        {% for ad in ads %}
+            <div class="card m-2" style="width: 22rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ad.nombre }}</h5>
+                    <p class="card-text">{{ ad.contenido }}</p>
+                    {% if ad.imagen %}
+                        <img src="{{ ad.imagen.url }}" class="img-fluid mt-2" style="max-height: 180px;">
+                    {% endif %}
+                    <p class="mt-2"><b>Estado:</b> {{ ad.estado }}</p>
+                    {% if ad.comentario_admin %}
+                        <p><b>Comentario:</b> {{ ad.comentario_admin }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info mt-3">No tienes solicitudes de Ads.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

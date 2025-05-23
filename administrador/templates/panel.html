@@ -138,6 +138,7 @@
                 <select id="social-selector" class="form-select">
                     <option value="x">X</option>
                     <option value="facebook">Facebook</option>
+                    <option value="tiktok">TikTok</option>
                 </select>
             </div>
 
@@ -202,6 +203,54 @@
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{% url 'crear_creative' %}">Crear creative</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_creatives' %}">Mis creatives</a></li>
+                </ul>
+            </li>
+
+            <!-- Posts en TikTok - Submenú desplegable -->
+            <!-- Eliminado: Posts TikTok -->
+
+            <!-- Sistema de Anuncios TikTok -->
+            <!-- Eliminado: Anuncios TikTok -->
+
+            <!-- Advertisers TikTok -->
+            <li class="nav-item social-tiktok">
+                <a class="nav-link" href="{% url 'advertiser_tiktok_list' %}">
+                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Advertisers
+                </a>
+            </li>
+
+            <!-- Campañas TikTok -->
+            <li class="nav-item social-tiktok">
+                <a class="nav-link dropdown-toggle" href="#">
+                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Campañas
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'advertiser_tiktok_list' %}">Ver Advertisers</a></li>
+                    <!-- Aquí podrías poner un acceso directo a crear campaña si lo deseas -->
+                </ul>
+            </li>
+
+            <!-- Ad Groups TikTok - Submenú desplegable -->
+            <li class="nav-item social-tiktok">
+                <a class="nav-link dropdown-toggle" href="#">
+                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Ad Groups
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'adgroup_tiktok_all' %}">Ver todos</a></li>
+                </ul>
+            </li>
+
+            <!-- Ads TikTok - Submenú desplegable -->
+            <li class="nav-item social-tiktok">
+                <a class="nav-link dropdown-toggle" href="#">
+                    <img src="{% static 'images/tiktok_icono.png' %}" class="icono"> Ads
+                </a>
+                <ul class="dropdown-menu">
+                    {% if request.user.is_staff %}
+                    <li><a class="dropdown-item" href="{% url 'revisar_ads_tiktok' %}">Ver pendientes</a></li>
+                    {% endif %}
+                    <li><a class="dropdown-item" href="{% url 'mis_solicitudes_ads_tiktok' %}">Mis solicitudes</a></li>
+                    <li><a class="dropdown-item" href="{% url 'ad_tiktok_all' %}">Ver todos</a></li>
                 </ul>
             </li>
         </ul>
@@ -270,7 +319,8 @@
                     const isRelevant =
                         selected === 'facebook' && item.classList.contains('social-facebook') ||
                         selected === 'instagram' && item.classList.contains('social-instagram') ||
-                        selected === 'x' && item.classList.contains('social-x');
+                        selected === 'x' && item.classList.contains('social-x') ||
+                        selected === 'tiktok' && item.classList.contains('social-tiktok');
     
                     item.style.display = isRelevant ? 'block' : 'none';
                 });

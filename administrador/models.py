@@ -158,4 +158,56 @@ class Vacante(models.Model):
     def __str__(self):
         return self.vacante
     
+# ---------------------- MODELOS TIKTOK ---------------------- #
+class AdvertiserTikTok(models.Model):
+    nombre = models.CharField(max_length=100)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    descripcion = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+class CampaignTikTok(models.Model):
+    advertiser = models.ForeignKey(AdvertiserTikTok, on_delete=models.CASCADE, related_name='campaigns')
+    nombre = models.CharField(max_length=100)
+    objetivo = models.CharField(max_length=100)
+    presupuesto = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.nombre
+
+class AdGroupTikTok(models.Model):
+    campaign = models.ForeignKey(CampaignTikTok, on_delete=models.CASCADE, related_name='adgroups')
+    nombre = models.CharField(max_length=100)
+    segmentacion = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.nombre
+
+class AdTikTok(models.Model):
+    adgroup = models.ForeignKey(AdGroupTikTok, on_delete=models.CASCADE, related_name='ads')
+    nombre = models.CharField(max_length=100)
+    contenido = models.TextField()
+    url = models.URLField(blank=True)
+    imagen = models.ImageField(upload_to='tiktok_ads_images/', null=True, blank=True)
+    # ...otros campos...
+
+    ESTADOS = [
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+        ('PUBLICADO', 'Publicado'),
+    ]
+    
+    status = models.CharField(max_length=100, blank=True)
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='PENDIENTE')
+    comentario_admin = models.TextField(blank=True, null=True)
+
+    revision = models.OneToOneField(Revision, on_delete=models.CASCADE, null=True, blank=True) # Campo para aprovación
+    created_at = models.DateField(default=date.today)
+
+    def __str__(self):
+        return self.nombre
+    
+
 # ----------------------------------------------------#

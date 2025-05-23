@@ -1,0 +1,18 @@
+{% extends 'panel.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow" style="width: 35rem;">
+        <div class="card-body">
+            <h2 class="card-title mb-4 text-center">Nueva campaña TikTok</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a href="{% url 'campaign_tiktok_list' advertiser_id %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

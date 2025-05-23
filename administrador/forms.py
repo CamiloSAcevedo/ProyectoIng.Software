@@ -1,5 +1,6 @@
 from django import forms
 from .models import Campaign, AdSet, Ad, Creative, Vacante
+from .models import AdvertiserTikTok, CampaignTikTok, AdGroupTikTok, AdTikTok
 
 class CampaignForm(forms.ModelForm):
     class Meta:
@@ -50,4 +51,31 @@ class VacanteForm(forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     archivo = forms.FileField(label='Seleccionar archivo Excel')
+
+
+
+class AdvertiserTikTokForm(forms.ModelForm):
+    class Meta:
+        model = AdvertiserTikTok
+        fields = ['nombre', 'descripcion']
+
+class CampaignTikTokForm(forms.ModelForm):
+    class Meta:
+        model = CampaignTikTok
+        fields = ['advertiser', 'nombre', 'objetivo', 'presupuesto']
+
+class AdGroupTikTokForm(forms.ModelForm):
+    class Meta:
+        model = AdGroupTikTok
+        fields = ['campaign', 'nombre', 'segmentacion']
+
+class AdTikTokForm(forms.ModelForm):
+    class Meta:
+        model = AdTikTok
+        fields = ['adgroup', 'nombre', 'contenido', 'url', 'imagen']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
 # ---------------------- MIS VACANTES ----------------------#

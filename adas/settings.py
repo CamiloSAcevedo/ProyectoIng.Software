@@ -147,3 +147,6 @@ TWITTER_ACCESS_SECRET = os.getenv("TWITTER_ACCESS_SECRET")
 
 # -------------------------------------------------- Gemini Api -----------------------------------------
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

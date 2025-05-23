@@ -1,0 +1,13 @@
+{% extends 'panel.html' %}
+{% block content %}
+<h2>Selecciona la campaña para crear un Ad Group</h2>
+<form method="post">{% csrf_token %}
+    <select name="campaign_id" class="form-select mb-3" required>
+        <option value="">Selecciona una campaña</option>
+        {% for camp in campaigns %}
+            <option value="{{ camp.id }}">{{ camp.nombre }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-success">Continuar</button>
+</form>
+{% endblock %}

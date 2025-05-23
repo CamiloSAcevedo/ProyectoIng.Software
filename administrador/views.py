@@ -23,7 +23,7 @@ from .models import AdvertiserTikTok, CampaignTikTok, AdGroupTikTok, AdTikTok
 from .forms import AdvertiserTikTokForm, CampaignTikTokForm, AdGroupTikTokForm, AdTikTokForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-
+from administrador.models import Revision
 
 # Cargar variables desde el .env
 load_dotenv()
@@ -110,29 +110,7 @@ def revisar_contenido_pendiente(request, tipo):
     })
 
 
-# Vista para actualizar estado y comentario (nuevo)
-# Se llama con actualizar_estado_contenido
-@user_passes_test(lambda u: u.is_staff)
-def aprobar_contenido(request, tipo, objeto_id):
-    MODELOS = {
-        'ad': Ad,
-        'post': Post,
-    }
 
-    Modelo = MODELOS.get(tipo)
-    if not Modelo:
-        messages.error(request, "Tipo de contenido inválido.")
-        return redirect("revisar_contenido_pendiente")
-
-    objeto = get_object_or_404(Modelo, pk=objeto_id)
-
-    if not hasattr(objeto, 'revision') or objeto.revision is None:
-        messages.error(request, f"Este {tipo} no tiene una revisión asociada.")
-        #return redirect("revisar_contenido_pendiente")
-        return redirect(reverse('revisar_contenido_pendiente', kwargs={'tipo':tipo}))
-
-
-    revision = objeto.revision
 # Vista para actualizar estado y comentario (nuevo)
 # Se llama con actualizar_estado_contenido
 @user_passes_test(lambda u: u.is_staff)
@@ -248,6 +226,7 @@ def crear_post(request):
 
 
 # ---------------------- CREAR CAMPAÑA META ----------------------#
+@login_required
 def campaña(request):
     if request.method == "POST":
         form = CampaignForm(request.POST) 
@@ -314,7 +293,7 @@ def crear_campaña(request):
     form = CampaignForm()
     return render(request, 'campaña.html', {'form': form})
 
-
+@login_required
 def mis_campañas(request):
     plataforma = request.session.get('plataforma', )
     campañas = Campaign.objects.filter(plataforma=plataforma)
@@ -338,10 +317,11 @@ OPTIMIZATION_GOALS = {
     "CONVERSIONS": ["CONVERSIONS", "VALUE", "LANDING_PAGE_VIEWS"],
 }
 
+@login_required
 def ad_set(request):
     form = AdSetForm()
     return render(request, 'ad_set.html', {'form': form})
-
+@login_required
 def crear_adset(request):
     if request.method == "POST":
         form = AdSetForm(request.POST)
@@ -396,7 +376,7 @@ def crear_adset(request):
 
     form = AdSetForm()
     return render(request, 'ad_set.html', {'form': form})
-
+@login_required
 def mis_adsets(request):
     plataforma = request.session.get('plataforma')
     adsets = AdSet.objects.filter(plataforma=plataforma)
@@ -426,8 +406,8 @@ def ad(request):
     form = AdForm()
     return render(request, 'ad.html', {'form': form})
 
-from administrador.models import Revision  # Asegúrate de importar el modelo Revision
-
+  # Asegúrate de importar el modelo Revision
+@login_required
 def crear_ad(request):
     if request.method == "POST":
         form = AdForm(request.POST)  
@@ -463,7 +443,7 @@ def crear_ad(request):
     form = AdForm()
     return render(request, 'ad.html', {'form': form})
 
-
+@login_required
 def crear_ad_meta(request, ad):
     print("Se llamó la función de crear_ad_meta")
     return True
@@ -495,7 +475,7 @@ def crear_ad_meta(request, ad):
         messages.error(request, f"🚨 Error en la solicitud: {e}")
     '''
             
-
+@login_required
 def mis_ads(request):
     plataforma = request.session.get('plataforma')
     ads = Ad.objects.filter(plataforma=plataforma)
@@ -563,7 +543,7 @@ def generar_body_ia(request):
 
 
 # ---------------------- CREAR CREATIVE META  ----------------------#
-
+@login_required
 def crear_creative(request):
     if request.method == "POST":
         form = CreativeForm(request.POST)
@@ -627,14 +607,14 @@ def crear_creative(request):
     form = CreativeForm()
 
     return render(request, "creative.html", {"form": form})
-
+@login_required
 def mis_creatives(request):
     plataforma = request.session.get('plataforma')
     creatives = Creative.objects.filter(plataforma = plataforma)
     return render(request, 'mis_creatives.html', {'creatives':creatives})
 
 # ---------------------- VER MIS VACANTES ----------------------#
-
+@login_required
 def mis_vacantes(request):
     if request.method == 'POST':
         # Obtén los datos del formulario

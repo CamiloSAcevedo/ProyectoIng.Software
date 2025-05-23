@@ -542,9 +542,10 @@ def mis_vacantes(request):
     if query:
         # Filtrar las vacantes que coincidan con el término de búsqueda
         vacantes = Vacante.objects.filter(
-            #Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
-            #Q(empresa__icontains=query) |   # Buscar en el campo 'empresa'
-            Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
+            Q(vacante__icontains=query) |
+            Q(empresa__icontains=query) |
+            Q(ubicacion__icontains=query)
+            #Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
         )
     else:
         # Si no hay término de búsqueda, muestra todas las vacantes

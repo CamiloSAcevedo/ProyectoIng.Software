@@ -17,15 +17,15 @@
 /* Estilo para el botón de publicar */
 
 .btn-publicar {
-    background-color: #4e4e4e;
-    border-color: #000000;
+    background-color: #3dc971;
+    border-color: none;
     color: white;
     font-weight: bold;
 }
 .btn-publicar:hover {
-    background-color: #545454;
-    border-color: #000000;
-    color: black;
+    background-color: #9ee4b8;
+    border-color: none;
+    color: white;
 }
 </style>
 
@@ -43,8 +43,6 @@
     {% csrf_token %} <!-- Token de seguridad para CSRF -->
 
     <div class="mb-3">
-    <label for="vacanteSeleccionar" class="form-label">Seleccionar vacante existente:</label>
-    <p>Total vacantes: {{ vacantes|length }}</p>
     <select id="vacanteSeleccionar" class="form-select">
         <option value="">-- Selecciona una vacante --</option>
         {% for vacante in vacantes %}

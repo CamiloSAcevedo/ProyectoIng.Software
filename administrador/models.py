@@ -168,18 +168,35 @@ class Ad(models.Model):
 
 # ---------------------- VACANTES ----------------------#
 class Vacante(models.Model):
+    INDUSTRIAS = [
+        ('TECNOLOGIA', 'Tecnología e Informática'),
+        ('SALUD', 'Salud y Medicina'),
+        ('EDUCACION', 'Educación'),
+        ('INGENIERIA', 'Ingeniería y Manufactura'),
+        ('VENTAS', 'Ventas y Marketing'),
+        ('ADMINISTRACION', 'Administración y Negocios'),
+        ('LEGAL', 'Legal'),
+        ('LOGISTICA', 'Logística y Transporte'),
+        ('SERVICIOS', 'Servicios Generales'),
+        ('TURISMO', 'Turismo y Hospitalidad'),
+        ('ENTRETENIMIENTO', 'Artes, Medios y Entretenimiento'),
+        ('INVESTIGACION', 'Ciencia e Investigación'),
+        ('AGROINDUSTRIA', 'Agroindustria y Medio Ambiente'),
+    ]
+
     vacante = models.CharField(max_length=255)
     empresa = models.TextField(max_length=100)
     ubicacion = models.CharField(max_length=255)
     contrato = models.CharField(max_length=100)
     salario = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
-    industria = models.CharField(max_length=100, null=True)
+    industria = models.CharField(max_length=100, choices=INDUSTRIAS, null=True)
     modalidad = models.CharField(max_length=50, choices=[('Remoto', 'Remoto'), ('Presencial', 'Presencial'), ('Híbrido', 'Híbrido')], null=True)
     experiencia = models.CharField(max_length=100, null=True)
     grupo = models.IntegerField(null=True, blank=True) # Para clustering
+    #modelo_clustering = models.ForeignKey(ModeloEntrenado, null=True, blank=True, on_delete=models.SET_NULL)
 
-    def __str__(self):
+    def __str__(self):  
         return self.vacante
     
 # ----------------------------------------------------#

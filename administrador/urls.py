@@ -37,11 +37,16 @@ urlpatterns = [
 
     # Vacantes
     path('vacantes/', views.mis_vacantes, name='vacantes'),
-    path('cargar_excel/', views.cargar_excel, name='cargar_excel'),
+
     # ---------------------- VER MIS VACANTES ----------------------#
-    path('vacantes/', views.mis_vacantes, name='mis_vacantes'),
+    #path('vacantes/', views.mis_vacantes, name='mis_vacantes'),
     path('cargar_excel/', views.cargar_excel, name='cargar_excel'),
-    # -------------------------------------------------#
+
+
+    # AUTORELLENO VACANTES A POST X 
+    path('obtener-vacante/<int:vacante_id>/', views.obtener_vacante, name='obtener_vacante'),
+    
+
 
 ]
 

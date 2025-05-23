@@ -85,6 +85,7 @@
     .btn-logout:hover { /* Estilo al pasar el mouse sobre el botón de cerrar sesión */
         background-color: transparent; /* Fondo transparente */
         border-color: black; /* Borde negro */
+        border-color: black; /* Borde negro */
     }
     .icono { /* Estilo de los iconos */
         width: 20px;  /* Ancho del icono */
@@ -114,6 +115,7 @@
     <!-- Barra lateral -->
     <div class="sidebar">
         
+        
         <!-- Logo y navegación -->
         <nav class="navbar navbar-light bg-light">
             <div class="container">
@@ -127,6 +129,7 @@
 
             <ul class="navbar-nav">
 
+            <!-- Gestionar vacantes -->
             <!-- Gestionar vacantes -->
             <a href="{% url 'vacantes' %}" class="btn btn-light">
                 <img src="{% static 'images/vacante_icono.png' %}" class="icono"> Vacantes
@@ -216,6 +219,7 @@
                     <li><a class="dropdown-item" href="{% url 'mis_campañas' %}">Mis campañas</a></li>
                 </ul>
             </li>
+
             <!-- Ad sets - Submenú desplegable -->
             <li class="nav-item social-instagram">
 
@@ -227,6 +231,7 @@
                 </ul>
             </li>
 
+
             <!-- Ads - Submenú desplegable -->
             <li class="nav-item social-instagram">
                 <a class="nav-link dropdown-toggle" href="#"> <img src="{% static 'images/ad_icono.png' %}" class="icono"> Ads</a>
@@ -235,12 +240,17 @@
                     <li><a class="dropdown-item" href="{% url 'mis_ads' %}">Mis ads</a></li>
                     <li><a class="dropdown-item" href="{% url 'mis_solicitudes_contenido' 'ad' %}">Solicitudes de ads</a></li>
                     <!-- Enlace a administración ads -->
+                    <li><a class="dropdown-item" href="{% url 'mis_solicitudes_contenido' 'ad' %}">Solicitudes de ads</a></li>
+                    <!-- Enlace a administración ads -->
                     {% if request.user.is_staff %}
                     <!-- Solo para staff -->
                     <li><a href="{% url 'revisar_contenido_pendiente' 'ad' %}">Revisar Ads pendientes</a></li>
                     {% endif %}
+                    <li><a href="{% url 'revisar_contenido_pendiente' 'ad' %}">Revisar Ads pendientes</a></li>
+                    {% endif %}
                 </ul>
             </li>
+
 
             <!-- Creatives - Submenú desplegable -->
             <li class="nav-item social-instagram">

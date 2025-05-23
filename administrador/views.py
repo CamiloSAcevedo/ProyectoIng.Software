@@ -8,6 +8,7 @@ from django.db.models import Q
 #from .models import Alert
 from .forms import CampaignForm, AdSetForm, AdForm, CreativeForm, VacanteForm, UploadFileForm
 from .models import Campaign, AdSet, Ad, Creative, Vacante, Post
+from .models import Campaign, AdSet, Ad, Creative, Vacante, Post
 from django. http import JsonResponse 
 import requests
 import os
@@ -43,6 +44,7 @@ PAGE_ID = os.getenv("PAGE_ID")
 def panel(request):
     return render(request, 'panel.html')
 
+@login_required
 @login_required
 def estadisticas(request):
     return render(request, 'estadisticas.html')
@@ -109,6 +111,29 @@ def aprobar_contenido(request, tipo, objeto_id):
 
 
     revision = objeto.revision
+# Vista para actualizar estado y comentario (nuevo)
+# Se llama con actualizar_estado_contenido
+@user_passes_test(lambda u: u.is_staff)
+def aprobar_contenido(request, tipo, objeto_id):
+    MODELOS = {
+        'ad': Ad,
+        'post': Post,
+    }
+
+    Modelo = MODELOS.get(tipo)
+    if not Modelo:
+        messages.error(request, "Tipo de contenido inválido.")
+        return redirect("revisar_contenido_pendiente")
+
+    objeto = get_object_or_404(Modelo, pk=objeto_id)
+
+    if not hasattr(objeto, 'revision') or objeto.revision is None:
+        messages.error(request, f"Este {tipo} no tiene una revisión asociada.")
+        #return redirect("revisar_contenido_pendiente")
+        return redirect(reverse('revisar_contenido_pendiente', kwargs={'tipo':tipo}))
+
+
+    revision = objeto.revision
 
     if request.method == "POST":
         nuevo_estado = request.POST.get("estado")
@@ -116,9 +141,22 @@ def aprobar_contenido(request, tipo, objeto_id):
 
         revision.estado = nuevo_estado
         revision.comentario_admin = comentario
+        revision.estado = nuevo_estado
+        revision.comentario_admin = comentario
 
         try:
             if nuevo_estado == "Aprobado":
+                if tipo == "ad":
+                    if(crear_ad_meta(request, objeto)):
+                        messages.success(request, "Anuncio aprobado y publicado en Meta.")
+                    else:
+                        messages.success(request, "Hubo un error en la creación del anuncio.")
+                        revision.estado = "Rechazado"
+                elif tipo == "post":
+                    # Solo para posts: publicar en X (Twitter)
+                    #client.create_tweet(text=objeto.nombre)  # o texto, según tu modelo
+                    messages.success(request, "Post aprobado y publicado en X (Twitter).")
+                    messages.success(request, "Publicación aprobada.")
                 if tipo == "ad":
                     if(crear_ad_meta(request, objeto)):
                         messages.success(request, "Anuncio aprobado y publicado en Meta.")
@@ -193,8 +231,9 @@ def crear_post(request):
                 messages.error(request, f"Error al publicar el tweet: {str(e)}")
 
         return redirect("crear_post")  # Redirecciona a la misma página
-    
-    return render(request, "crear_post.html")
+    vacantes = Vacante.objects.all() #Necesario para el autocompletar
+                                              #  Necesario para el autocompletar
+    return render(request, "crear_post.html", {"vacantes": vacantes})
 
 
 # ---------------------- CREAR CAMPAÑA META ----------------------#
@@ -334,7 +373,7 @@ def crear_adset(request):
 
             except requests.exceptions.RequestException as e:
                 messages.error(request, f"🚨 Error en la solicitud: {e}")
-            ##'''
+            #'''
             return redirect('crear_adset')
         
         else:
@@ -609,16 +648,17 @@ def mis_vacantes(request):
             salario=salario,
             descripcion=descripcion
         )
-        return redirect('mis_vacantes')  # Redirige a la misma página después de guardar
+        return redirect('vacantes')  # Redirige a la misma página después de guardar
 
     # Manejar la búsqueda de vacantes
     query = request.GET.get('q')  # Obtén el término de búsqueda del parámetro 'q'
     if query:
         # Filtrar las vacantes que coincidan con el término de búsqueda
         vacantes = Vacante.objects.filter(
-            Q(vacante__icontains=query) |  # Buscar en el campo 'vacante'
-            Q(empresa__icontains=query) |   # Buscar en el campo 'empresa'
-            Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
+            Q(vacante__icontains=query) |
+            Q(empresa__icontains=query) |
+            Q(ubicacion__icontains=query)
+            #Q(grupo__icontains=query)   # Buscar en el campo 'grupo'
         )
     else:
         # Si no hay término de búsqueda, muestra todas las vacantes
@@ -647,4 +687,18 @@ def cargar_excel(request):
                 )
         return redirect('vacantes')
     
-# ------------------------------------------------------------#
+# ---------------------------- AUTO RELLENO EN POST --------------------------------#
+
+def obtener_vacante(request, vacante_id):
+    try:
+        vacante = Vacante.objects.get(id=vacante_id)
+        return JsonResponse({
+            'vacante': vacante.vacante or "",
+            'empresa': vacante.empresa or "",
+            'ubicacion': vacante.ubicacion or "",
+            'contrato': vacante.contrato or "",
+            'salario': vacante.salario or "",
+            'descripcion': vacante.descripcion or ""
+        })
+    except Vacante.DoesNotExist:
+        return JsonResponse({'error': 'Vacante no encontrada'}, status=404)

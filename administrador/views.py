@@ -49,7 +49,6 @@ def panel(request):
     return render(request, 'panel.html')
 
 @login_required
-@login_required
 def estadisticas(request):
     return render(request, 'estadisticas.html')
 
@@ -169,17 +168,6 @@ def aprobar_contenido(request, tipo, objeto_id):
 
         try:
             if nuevo_estado == "Aprobado":
-                if tipo == "ad":
-                    if(crear_ad_meta(request, objeto)):
-                        messages.success(request, "Anuncio aprobado y publicado en Meta.")
-                    else:
-                        messages.success(request, "Hubo un error en la creación del anuncio.")
-                        revision.estado = "Rechazado"
-                elif tipo == "post":
-                    # Solo para posts: publicar en X (Twitter)
-                    #client.create_tweet(text=objeto.nombre)  # o texto, según tu modelo
-                    messages.success(request, "Post aprobado y publicado en X (Twitter).")
-                    messages.success(request, "Publicación aprobada.")
                 if tipo == "ad":
                     if(crear_ad_meta(request, objeto)):
                         messages.success(request, "Anuncio aprobado y publicado en Meta.")
